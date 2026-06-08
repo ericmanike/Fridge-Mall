@@ -4,6 +4,29 @@ import { ArrowRight, Banknote, Gift, Truck } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import { products } from "@/lib/products";
+import HeroSlider from "@/components/HeroSlider";
+
+const heroSlides = [
+  {
+    id: 1,
+    title: "Don't miss out on insider perks",
+    description: "What are you waiting for? Make the most of Fridge Mall account benefits.",
+    ctaText: "Sign in",
+    ctaLink: "/auth/login",
+    backgroundImage: "/hero-lifestyle.png",
+    imageAlt: "Insider perks lifestyle",
+  },
+  {
+    id: 2,
+    title: "Quality fridges, delivered free to your door",
+    description: "Browse top brands, order online, and pay only when we deliver.",
+    ctaText: "Shop all fridges",
+    ctaLink: "/products",
+    backgroundImage: "/hero-fridge-1.png",
+    imageAlt: "Premium modern kitchen with smart refrigerator",
+  },
+];
+
 
 const perks: { title: string; description: string; Icon: LucideIcon }[] = [
   {
@@ -28,53 +51,9 @@ export default function Home() {
 
   return (
     <div>
-      <section className="relative overflow-hidden bg-linear-to-br from-[#0066FF] via-sky-700 to-slate-800 text-white">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute -right-20 -top-20 h-80 w-80 rounded-full bg-white" />
-          <div className="absolute -bottom-10 left-10 h-60 w-60 rounded-full bg-sky-300" />
-        </div>
-        <div className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
-          <p className="text-sm font-semibold uppercase tracking-widest text-sky-200">
-            Ghana&apos;s fridge marketplace
-          </p>
-          <h1 className="mt-4 max-w-2xl text-4xl font-bold leading-tight sm:text-5xl">
-            Quality fridges, delivered free to your door
-          </h1>
-          <p className="mt-5 max-w-xl text-lg text-sky-100">
-            Browse top brands, order online, and pay only when we deliver.
-            Refer a friend and earn GHS 50 instantly.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <Link
-              href="/products"
-              className="rounded-xl bg-white px-6 py-3 text-sm font-bold text-[#0066FF] transition hover:bg-sky-50"
-            >
-              Shop all fridges
-            </Link>
-            <Link
-              href="/referral"
-              className="rounded-[10px]  px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
-            >
-              Refer &amp; earn GHS 50
-            </Link>
-          </div>
-        </div>
-      </section>
+      <HeroSlider slides={heroSlides} />
 
-      <section className="mx-auto w-full bg-linear-to-br from-sky-50 to-white  px-4 py-14 sm:px-6">
-        <div className=" w-full grid gap-4 sm:grid-cols-3">
-          {perks.map((perk) => (
-            <div
-              key={perk.title}
-              className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-            >
-              <perk.Icon className="h-8 w-8 text-sky-600" strokeWidth={1.75} />
-              <h3 className="mt-3 font-bold text-slate-900">{perk.title}</h3>
-              <p className="mt-1 text-sm text-slate-600">{perk.description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+  
 
       <section className="bg-[#E2E8F0] py-14">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
