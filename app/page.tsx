@@ -50,7 +50,7 @@ export default function Home() {
   const featured = products.slice(0, 4);
 
   return (
-    <div>
+    <div className="bg-white w-full">
       <HeroSlider slides={heroSlides} />
 
   
