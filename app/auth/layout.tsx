@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { RadioTower, ArrowRight, HelpCircle } from "lucide-react";
 
 interface AuthLayoutProps {
@@ -12,15 +13,16 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
       
       {/* 1. Header (Logo & Subtitle) */}
       <div className="mb-6 flex flex-col items-center text-center">
-        <Link href="/" className="inline-flex items-center gap-2.5 group mb-1.5">
-  
-          <span className="text-[27px] font-extrabold flex items-baseline leading-none">
-            <span className="text-[#1e3a8a]"> Fridge</span>
-            <span className="text-[#fb923c] ml-1">Mall</span> 
-          
-          </span>
+        <Link href="/">
+          <Image
+            src="/logo.png"
+            alt="Fridge Mall Logo"
+            width={146}
+            height={60}
+            className="object-contain animate-fade-in"
+            priority
+          />
         </Link>
-       
       </div>
 
   

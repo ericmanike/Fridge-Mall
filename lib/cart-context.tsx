@@ -126,6 +126,25 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem(ORDERS_KEY, JSON.stringify(updatedOrders));
       setOrders(updatedOrders);
 
+      // Async sync order details to Mongoose DB
+      fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          orderId: order.id,
+          items: order.items,
+          details: order.details,
+          subtotal: order.subtotal,
+          deliveryFee: order.deliveryFee,
+          total: order.total,
+          paymentMethod: order.paymentMethod,
+          status: order.status,
+          referralCodeUsed: order.referralCodeUsed,
+        }),
+      }).catch((err) => console.error("Error syncing order to DB:", err));
+
       if (details.referralCode) {
         const myCode = getOrCreateReferralCode();
         if (details.referralCode !== myCode) {

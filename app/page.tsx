@@ -3,7 +3,9 @@ import Image from "next/image";
 import { ArrowRight, Banknote, Gift, Truck } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
-import { products } from "@/lib/products";
+import dbConnect from "@/lib/mongoose";
+import ProductModel from "@/models/Products";
+import { products as staticProducts } from "@/lib/products";
 import HeroSlider from "@/components/HeroSlider";
 
 const heroSlides = [
@@ -46,8 +48,33 @@ const perks: { title: string; description: string; Icon: LucideIcon }[] = [
   },
 ];
 
-export default function Home() {
-  const featured = products.slice(0, 4);
+export default async function Home() {
+  let displayProducts = [];
+  try {
+    await dbConnect();
+    const dbProducts = await ProductModel.find().limit(4);
+    if (dbProducts.length > 0) {
+      displayProducts = dbProducts.map((p: any) => ({
+        id: p._id.toString(),
+        name: p.name,
+        brand: p.brand,
+        price: p.price,
+        capacity: p.capacity,
+        energyRating: p.energyRating,
+        description: p.description,
+        features: p.features,
+        image: p.image,
+        inStock: p.inStock,
+      }));
+    } else {
+      displayProducts = staticProducts.slice(0, 4);
+    }
+  } catch (err) {
+    console.error("Failed to load products for homepage, falling back:", err);
+    displayProducts = staticProducts.slice(0, 4);
+  }
+
+  const featured = displayProducts;
 
   return (
     <div className="bg-white w-full">
