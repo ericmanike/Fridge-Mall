@@ -143,22 +143,7 @@ export default function DashboardClient({ initialUser }: DashboardClientProps) {
     }
   };
 
-  const handleAddFunds = async () => {
-    try {
-      const res = await fetch("/api/user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "addFunds" }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        toast.success("Mock GHS 1,000.00 added to your wallet!");
-        await fetchUserProfile();
-      }
-    } catch (err) {
-      toast.error("Failed to add funds");
-    }
-  };
+
 
   const handleCopyCode = async () => {
     if (navigator.clipboard && referralCode) {
@@ -349,8 +334,7 @@ export default function DashboardClient({ initialUser }: DashboardClientProps) {
                   <h3 className="font-bold text-base">Development Playground</h3>
                 </div>
                 <p className="text-xs text-slate-500 mb-4 leading-relaxed">
-                  Use these mock actions to toggle your role to <strong>admin</strong> (to see the Admin Panel subroutes)
-                  or add mock credit to your wallet to test layouts.
+                  Use these mock actions to toggle your role to <strong>admin</strong> (to see the Admin Panel subroutes).
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <button
@@ -359,13 +343,6 @@ export default function DashboardClient({ initialUser }: DashboardClientProps) {
                   >
                     <RefreshCw className="h-3.5 w-3.5" />
                     Toggle Admin / User Role
-                  </button>
-                  <button
-                    onClick={handleAddFunds}
-                    className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 px-4 py-2.5 text-xs font-bold text-slate-700 transition cursor-pointer"
-                  >
-                    <PlusCircle className="h-3.5 w-3.5 text-emerald-600" />
-                    Add GHS 1,000 Mock Funds
                   </button>
                 </div>
               </div>
@@ -446,7 +423,7 @@ export default function DashboardClient({ initialUser }: DashboardClientProps) {
                 <h3 className="mt-2 text-2xl font-black">Earn GHS 50.00 Instantly</h3>
                 <p className="mt-3 text-sm text-amber-950/80 leading-relaxed">
                   Give friends the gift of quality refrigerators! When they place an order using your referral code,
-                  they enjoy free shipping, and you get GHS 50.00 credited directly to your Fridge Mall wallet.
+                  they enjoy free shipping, and you get a GHS 50.00 reward.
                 </p>
               </div>
 
@@ -497,25 +474,6 @@ export default function DashboardClient({ initialUser }: DashboardClientProps) {
 
         {/* Right 1 Col: Balance & Stats Area */}
         <div className="space-y-6">
-          {/* Wallet Balance Card */}
-          <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-xs relative overflow-hidden">
-            <div className="absolute right-0 top-0 h-24 w-24 translate-x-4 -translate-y-4 rounded-full bg-emerald-500/5" />
-            <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Wallet Balance</h3>
-            <div className="mt-4 flex items-baseline gap-2">
-              <span className="text-sm font-bold text-slate-500">GHS</span>
-              <span className="text-3xl font-black text-slate-900">{formatCurrency(user.walletBalance).replace("GHS", "").trim()}</span>
-            </div>
-            <p className="mt-2 text-xs text-slate-500">Use this balance to purchase products or withdraw funds.</p>
-
-            <button
-              onClick={handleAddFunds}
-              className="mt-5 w-full flex items-center justify-center gap-2 rounded-xl bg-slate-50 hover:bg-slate-100 py-3 text-sm font-bold text-slate-700 transition border border-slate-200 cursor-pointer"
-            >
-              <CircleDollarSign className="h-4 w-4 text-emerald-600" />
-              Add Mock Funds
-            </button>
-          </div>
-
           {/* Quick Metrics */}
           <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-xs">
             <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Earnings & Stats</h3>

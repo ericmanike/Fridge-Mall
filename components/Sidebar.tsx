@@ -64,7 +64,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, user }: SidebarPr
   return (
     <>
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-[270px] bg-white border-r border-slate-200 flex flex-col h-screen xl:sticky xl:top-0 transition-transform duration-300 xl:translate-x-0 xl:shrink-0 ${
+        className={`fixed inset-y-0 left-0 z-40 w-[270px] bg-white border-r border-slate-200 flex flex-col h-screen transition-transform duration-300 xl:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

@@ -43,7 +43,7 @@ export default function ReferralDashboardPage() {
         <p className="text-xs font-bold uppercase tracking-wider text-amber-900/80">Referral program</p>
         <h3 className="mt-2 text-2xl font-black">Earn {formatCurrency(REFERRAL_REWARD_AMOUNT)} Instantly</h3>
         <p className="mt-3 text-sm text-amber-955/90 leading-relaxed">
-          Share your referral code with friends and family. When they purchase a refrigerator using your code at checkout, they receive free shipping, and you instantly receive GHS 50.00 in your Fridge Mall wallet.
+          Share your referral code with friends and family. When they purchase a refrigerator using your code at checkout, they receive free shipping, and you instantly receive a GHS 50.00 reward.
         </p>
       </div>
 
