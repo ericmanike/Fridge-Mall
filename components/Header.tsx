@@ -18,10 +18,10 @@ export default function Header() {
             <Image
               src="/logo1.png"
               alt="Fridge Mall Logo"
-              width={120}
-              height={60}
+              width={100}
+              height={40}
               priority
-              className="object-contain block h-16 w-auto transition hover:opacity-85"
+              className="object-contain block h-10 w-auto transition hover:opacity-85"
             />
           </Link>
       

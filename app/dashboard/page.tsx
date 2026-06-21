@@ -109,46 +109,20 @@ export default function DashboardIndexPage() {
     <div className="space-y-8 animate-in fade-in duration-300">
       <ToastContainer />
       <div className="grid gap-8 lg:grid-cols-3">
-        {/* Profile Card & Details */}
+        {/* Welcome Card & Summary */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
-            <h3 className="text-lg font-bold text-slate-900 mb-4">Account Details</h3>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="flex items-center gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                <UserIcon className="h-5 w-5 text-slate-400 shrink-0" />
-                <div>
-                  <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Full Name</p>
-                  <p className="text-sm font-semibold text-slate-700">{user.name}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                <Mail className="h-5 w-5 text-slate-400 shrink-0" />
-                <div>
-                  <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Email Address</p>
-                  <p className="text-sm font-semibold text-slate-700">{user.email}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                <Phone className="h-5 w-5 text-slate-400 shrink-0" />
-                <div>
-                  <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Phone Number</p>
-                  <p className="text-sm font-semibold text-slate-700">{user.phone || "Not set"}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                <Calendar className="h-5 w-5 text-slate-400 shrink-0" />
-                <div>
-                  <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Member Since</p>
-                  <p className="text-sm font-semibold text-slate-700">
-                    {new Date(user.createdAt).toLocaleDateString("en-GH", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </p>
-                </div>
-              </div>
-            </div>
+          <div className="rounded-2xl border border-slate-200 bg-[#0066FF] p-6 text-white shadow-xs relative overflow-hidden">
+            <div className="absolute right-0 top-0 h-32 w-32 translate-x-4 -translate-y-4 rounded-full bg-white/10" />
+            <h2 className="text-2xl font-black">Welcome back, {user.name}!</h2>
+            <p className="mt-2 text-sm text-blue-100">
+              Manage your orders, refer friends, and track your wallet balance all from one place.
+            </p>
+            <Link
+              href="/dashboard/profile"
+              className="mt-4 inline-flex items-center gap-2 rounded-xl bg-white hover:bg-slate-100 px-4 py-2.5 text-xs font-bold text-[#0066FF] transition cursor-pointer"
+            >
+              View Profile details
+            </Link>
           </div>
 
           {/* Quick Shortcuts */}

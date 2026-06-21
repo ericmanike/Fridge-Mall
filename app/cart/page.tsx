@@ -21,7 +21,7 @@ export default function CartPage() {
         </p>
         <Link
           href="/products"
-          className="mt-6 inline-block rounded-xl bg-sky-600 px-6 py-3 text-sm font-semibold text-white hover:bg-sky-700"
+          className="mt-6 inline-block rounded-xl bg-[#0066FF] hover:bg-[#0066ffe7] px-6 py-3 text-sm font-semibold text-white transition-colors"
         >
           Shop fridges
         </Link>

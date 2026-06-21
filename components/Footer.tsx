@@ -1,7 +1,14 @@
+"use client"
 import Link from "next/link";
 import { Check } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  const pathname = usePathname();
+  
+  if (pathname === "/auth/login" || pathname === "/auth/register"|| pathname === "/dashboard" || pathname === "/admin"|| pathname === "/admin/products"|| pathname === "/admin/orders"|| pathname === "/admin/users") {
+    return null;
+  }
   return (
     <footer className="mt-auto border-t border-slate-200 bg-slate-50">
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
