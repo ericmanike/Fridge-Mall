@@ -10,6 +10,9 @@ export default function Footer() {
     pathname === "/auth/login" || 
     pathname === "/auth/register" || 
     pathname === "/dashboard" || 
+    pathname === "/dashboard/orders" ||
+    pathname === "/dashboard/referral" ||
+    pathname === "/dashboard/profile" ||
     pathname === "/admin" || 
     pathname === "/admin/products" || 
     pathname === "/admin/orders" || 
@@ -19,7 +22,7 @@ export default function Footer() {
   }
 
   return (
-    <footer className="mt-auto border-t border-emerald-900/30 bg-[#062f17] text-slate-350">
+    <footer className="mt-auto border-t border-emerald-900/30 bg-[#091E3A]  text-slate-350">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
           {/* Brand Info */}

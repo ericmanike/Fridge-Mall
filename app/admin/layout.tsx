@@ -62,11 +62,10 @@ export default async function AdminLayout({
       <aside className="w-full shrink-0 border-b border-slate-200 bg-[#1874ff] text-white md:w-64 md:border-b-0 md:border-r">
         <div className="flex flex-col h-full justify-between">
           <div>
-            {/* Logo area */}
+       
             <div className="flex h-16 items-center px-6 border-b border-white/10">
               <span className="text-lg font-black text-white tracking-wider uppercase flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-red-400 animate-ping" />
-                Fridge Mall Admin
+             Admin Panel
               </span>
             </div>
 

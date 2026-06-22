@@ -9,7 +9,6 @@ import {
   CheckCircle,
   X,
   Shield,
-  Wallet,
   Phone,
   Mail,
   User,
@@ -36,7 +35,6 @@ export default function AdminUsersPage() {
 
   // Form State
   const [role, setRole] = useState<UserProfile["role"]>("user");
-  const [walletBalance, setWalletBalance] = useState("");
   const [saving, setSaving] = useState(false);
 
   const fetchUsers = async () => {
@@ -63,7 +61,6 @@ export default function AdminUsersPage() {
   const openEditModal = (user: UserProfile) => {
     setEditingUser(user);
     setRole(user.role);
-    setWalletBalance(user.walletBalance.toString());
   };
 
   const handleUpdateUser = async (e: React.FormEvent) => {
@@ -71,13 +68,6 @@ export default function AdminUsersPage() {
     if (!editingUser) return;
 
     setSaving(true);
-    const parsedBalance = parseFloat(walletBalance);
-
-    if (isNaN(parsedBalance) || parsedBalance < 0) {
-      toast.error("Please enter a valid wallet balance");
-      setSaving(false);
-      return;
-    }
 
     try {
       const res = await fetch("/api/admin/users", {
@@ -86,7 +76,6 @@ export default function AdminUsersPage() {
         body: JSON.stringify({
           userId: editingUser._id,
           role,
-          walletBalance: parsedBalance,
         }),
       });
 
@@ -253,26 +242,11 @@ export default function AdminUsersPage() {
                   className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-blue-500 bg-white font-semibold text-slate-700"
                 >
                   <option value="user">User</option>
-                  <option value="agent">Agent</option>
-                  <option value="moderator">Moderator</option>
                   <option value="admin">Admin</option>
                 </select>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-600">Wallet Balance (GHS)</label>
-                <div className="relative mt-1 flex items-center">
-                  <Wallet className="pointer-events-none absolute left-3.5 h-4.5 w-4.5 text-slate-400" />
-                  <input
-                    type="number"
-                    step="0.01"
-                    required
-                    value={walletBalance}
-                    onChange={(e) => setWalletBalance(e.target.value)}
-                    className="w-full rounded-lg border border-slate-200 py-2.5 pl-10 pr-4 text-sm outline-none focus:border-blue-500 font-semibold"
-                  />
-                </div>
-              </div>
+
 
               <div className="flex items-center justify-end gap-3 border-t border-slate-100 pt-4 mt-6">
                 <button

@@ -50,7 +50,20 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, user }: SidebarPr
   ];
 
   if (user.role === "admin") {
-    menuSections.push({
+    menuSections.length = 0;
+    menuSections.push(
+       {
+      title: "Main Menu",
+      items: [
+        { id: "dashboard", label: "Overview", href: "/dashboard", icon: Home, color: "bg-blue-50 text-blue-600" },
+        { id: "profile", label: "My Profile", href: "/dashboard/profile", icon: UserIcon, color: "bg-cyan-50 text-cyan-600" },
+        { id: "orders", label: "My Orders", href: "/dashboard/orders", icon: ShoppingBag, color: "bg-purple-50 text-purple-600" },
+        { id: "referral", label: "Refer & Earn", href: "/dashboard/referral", icon: Gift, color: "bg-amber-50 text-amber-600" },
+      ]
+    },
+      
+      
+      {
       title: "Admin Panel",
       items: [
         { id: "admin-overview", label: "Admin Overview", href: "/admin", icon: Shield, color: "bg-red-50 text-red-600" },
@@ -58,7 +71,17 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, user }: SidebarPr
         { id: "admin-orders", label: "Manage Orders", href: "/admin/orders", icon: ShoppingBag, color: "bg-pink-50 text-pink-600" },
         { id: "admin-users", label: "Manage Users", href: "/admin/users", icon: UserIcon, color: "bg-cyan-50 text-cyan-600" },
       ]
-    });
+    },
+        {
+      title: "Storefront",
+      items: [
+        { id: "products", label: "Browse Fridges", href: "/products", icon: Store, color: "bg-emerald-50 text-emerald-600" },
+        { id: "cart", label: "View Cart", href: "/cart", icon: ShoppingCart, color: "bg-rose-50 text-rose-600" },
+      ]
+    }
+
+  
+  );
   }
 
   return (
