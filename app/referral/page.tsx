@@ -23,10 +23,27 @@ export default function ReferralPage() {
     setTotalEarnings(getTotalReferralEarnings());
   }, []);
 
+  const [copiedLink, setCopiedLink] = useState(false);
+  const [baseUrl, setBaseUrl] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setBaseUrl(window.location.origin);
+    }
+  }, []);
+
+  const referralLink = `${baseUrl}?refferedby=${code}`;
+
   async function copyCode() {
     await navigator.clipboard.writeText(code);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  }
+
+  async function copyLink() {
+    await navigator.clipboard.writeText(referralLink);
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2000);
   }
 
   const shareText = `Get quality fridges with FREE delivery at Fridge Mall! Use my referral code ${code} when you order and I'll earn ${formatCurrency(REFERRAL_REWARD_AMOUNT)}. Shop now!`;
@@ -60,6 +77,26 @@ export default function ReferralPage() {
             <Copy className="h-4 w-4" />
             {copied ? "Copied!" : "Copy code"}
           </button>
+        </div>
+
+        {/* Shareable Link */}
+        <div className="mt-5 border-t border-slate-100 pt-4">
+          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Your Shareable Link</p>
+          <div className="mt-2 flex items-center gap-3">
+            <input
+              readOnly
+              value={referralLink}
+              onClick={(e) => (e.target as HTMLInputElement).select()}
+              className="flex-1 rounded-xl bg-slate-50 border border-slate-200 px-4 py-2.5 text-xs font-mono text-slate-600 outline-none select-all"
+            />
+            <button
+              onClick={copyLink}
+              className="inline-flex items-center gap-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 px-4 py-2.5 text-xs font-semibold text-slate-700 transition cursor-pointer select-none"
+            >
+              <Copy className="h-3.5 w-3.5" />
+              {copiedLink ? "Copied!" : "Copy link"}
+            </button>
+          </div>
         </div>
         <button
           onClick={() => {

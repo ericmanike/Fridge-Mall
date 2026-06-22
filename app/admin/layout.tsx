@@ -12,6 +12,7 @@ import {
   Users,
   ArrowLeft,
   ShieldAlert,
+  Banknote,
 } from "lucide-react";
 
 export default async function AdminLayout({
@@ -59,7 +60,7 @@ export default async function AdminLayout({
   return (
     <div className="flex min-h-screen flex-col md:flex-row bg-slate-50 font-sans antialiased text-slate-800">
       {/* Sidebar Panel */}
-      <aside className="w-full shrink-0 border-b border-slate-200 bg-[#1874ff] text-white md:w-64 md:border-b-0 md:border-r">
+      <aside className="w-full shrink-0 border-b border-slate-200 bg-[#1874ff] text-white md:fixed md:inset-y-0 md:left-0 md:w-64 md:h-screen md:border-b-0 md:border-r z-30">
         <div className="flex flex-col h-full justify-between">
           <div>
        
@@ -99,6 +100,13 @@ export default async function AdminLayout({
                 <Users className="h-4.5 w-4.5" />
                 Manage Users
               </Link>
+              <Link
+                href="/admin/withdrawals"
+                className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-white/90 hover:bg-white/10 hover:text-white transition duration-200"
+              >
+                <Banknote className="h-4.5 w-4.5" />
+                Withdrawal Requests
+              </Link>
             </nav>
           </div>
 
@@ -116,7 +124,7 @@ export default async function AdminLayout({
       </aside>
 
       {/* Main page content area */}
-      <main className="flex-1 overflow-y-auto px-4 py-8 sm:px-6 md:px-8">
+      <main className="flex-1 overflow-y-auto px-4 py-8 sm:px-6 md:px-8 md:pl-[288px]">
         {children}
       </main>
     </div>

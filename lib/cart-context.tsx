@@ -62,6 +62,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const refCode = params.get("referredby") || params.get("refferedby");
+      if (refCode) {
+        localStorage.setItem("fridgemall-referredby", refCode);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     if (hydrated) {
       localStorage.setItem(CART_KEY, JSON.stringify(items));
     }

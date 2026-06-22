@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { formatCurrency } from "@/lib/utils";
 
 interface UserProfile {
   _id: string;
@@ -109,7 +108,7 @@ export default function AdminUsersPage() {
       <div>
         <h1 className="text-3xl font-black text-slate-900">Manage Users</h1>
         <p className="mt-1 text-sm text-slate-500">
-          Monitor registered shoppers, edit account roles, and load funds.
+          Monitor registered shoppers and edit account roles.
         </p>
       </div>
 
@@ -144,7 +143,6 @@ export default function AdminUsersPage() {
                 <tr className="border-b border-slate-200 bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-xs">
                   <th className="py-3.5 px-6">User</th>
                   <th className="py-3.5 px-6">Phone</th>
-                  <th className="py-3.5 px-6">Wallet Balance</th>
                   <th className="py-3.5 px-6">Role</th>
                   <th className="py-3.5 px-6">Registered On</th>
                   <th className="py-3.5 px-6 text-right">Actions</th>
@@ -162,9 +160,6 @@ export default function AdminUsersPage() {
                       </div>
                     </td>
                     <td className="py-4 px-6 text-slate-600">{u.phone || "Not Set"}</td>
-                    <td className="py-4 px-6 font-black text-slate-950">
-                      {formatCurrency(u.walletBalance)}
-                    </td>
                     <td className="py-4 px-6">
                       <span
                         className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider ${

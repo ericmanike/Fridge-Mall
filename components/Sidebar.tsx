@@ -14,7 +14,8 @@ import {
   User as UserIcon,
   X,
   Snowflake,
-  LogOut
+  LogOut,
+  Banknote,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -70,6 +71,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, user }: SidebarPr
         { id: "admin-products", label: "Manage Products", href: "/admin/products", icon: Store, color: "bg-indigo-50 text-indigo-600" },
         { id: "admin-orders", label: "Manage Orders", href: "/admin/orders", icon: ShoppingBag, color: "bg-pink-50 text-pink-600" },
         { id: "admin-users", label: "Manage Users", href: "/admin/users", icon: UserIcon, color: "bg-cyan-50 text-cyan-600" },
+        { id: "admin-withdrawals", label: "Withdrawal Requests", href: "/admin/withdrawals", icon: Banknote, color: "bg-emerald-50 text-emerald-600" },
       ]
     },
         {

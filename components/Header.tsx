@@ -33,7 +33,7 @@ export default function Header() {
             className="relative flex items-center gap-2 rounded-full bg-[#0066FF] px-2 py-2 text-sm font-semibold text-white transition hover:bg-[#0066ffe7]"
           >
             <ShoppingCart className="h-5 w-5" />
-            {itemCount > 0 && (
+            {itemCount >= 0 && (
               <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-amber-400 text-xs font-bold text-slate-900 animate-bounce">
                 {itemCount}
               </span>

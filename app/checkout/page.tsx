@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowLeft, CircleCheck } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
@@ -11,6 +11,16 @@ export default function CheckoutPage() {
   const { items, subtotal, placeOrder } = useCart();
   const [submitted, setSubmitted] = useState(false);
   const [orderId, setOrderId] = useState("");
+  const [referralCode, setReferralCode] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("fridgemall-referredby");
+      if (stored) {
+        setReferralCode(stored);
+      }
+    }
+  }, []);
 
   if (items.length === 0 && !submitted) {
     return (
@@ -175,6 +185,8 @@ export default function CheckoutPage() {
             </p>
             <input
               name="referralCode"
+              value={referralCode}
+              onChange={(e) => setReferralCode(e.target.value)}
               placeholder="e.g. FMABC123"
               className="mt-3 w-full rounded-lg border border-amber-300 bg-white px-3 py-2 text-sm uppercase outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
             />

@@ -111,7 +111,7 @@ export default async function AdminDashboardPage() {
 
       {/* Order Status Breakdown */}
       <div className="rounded-2xl border border-slate-200 bg-white p-6">
-        <h3 className="text-base font-bold text-slate-800 mb-4">Order Funnel Summary</h3>
+        <h3 className="text-base font-bold text-slate-800 mb-4">Orders  Summary</h3>
         <div className="grid gap-4 sm:grid-cols-3">
           <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-50">
             <AlertCircle className="h-5 w-5 text-amber-500 shrink-0" />
@@ -205,11 +205,11 @@ export default async function AdminDashboardPage() {
               <p className="text-xs text-slate-500 mt-0.5">Insert new brand or model specification into catalog</p>
             </Link>
             <Link
-              href="/admin/users"
-              className="block rounded-xl border border-slate-200 hover:border-amber-500 hover:bg-amber-50/20 p-4 transition text-left"
+              href="/admin/orders"
+              className="block rounded-xl border border-slate-200 hover:border-pink-500 hover:bg-pink-50/20 p-4 transition text-left"
             >
-              <p className="font-bold text-slate-800">Manage Privileges</p>
-              <p className="text-xs text-slate-500 mt-0.5">Grant admin roles or configure tester credit wallets</p>
+              <p className="font-bold text-slate-800">Manage Orders</p>
+              <p className="text-xs text-slate-500 mt-0.5">Track customer checkouts, verify payments, and update shipping status</p>
             </Link>
           </div>
         </div>

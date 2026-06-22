@@ -64,16 +64,7 @@ export default function ProfileDropdown() {
                 Dashboard
               </Link>
 
-              {(session.user as any)?.role === "admin" && (
-                <Link
-                  href="/admin"
-                  onClick={() => setIsDropdownOpen(false)}
-                  className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-bold text-red-650 hover:bg-red-50 transition"
-                >
-                  <ShieldAlert className="h-4 w-4 text-red-500" />
-                  Admin Panel
-                </Link>
-              )}
+            
 
               <button
                 onClick={() => {
