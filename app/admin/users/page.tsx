@@ -23,6 +23,8 @@ interface UserProfile {
   role: "user" | "agent" | "admin" | "moderator";
   walletBalance: number;
   phone?: string;
+  code?: string;
+  referredBy?: string;
   createdAt: string;
 }
 
@@ -157,6 +159,11 @@ export default function AdminUsersPage() {
                           {u.name}
                         </p>
                         <p className="text-xs text-slate-500">{u.email}</p>
+                        {u.code && (
+                          <p className="mt-1.5 text-[10px] font-bold text-slate-400 font-mono">
+                            Ref: {u.code}{u.referredBy ? ` · Referred by: ${u.referredBy}` : ""}
+                          </p>
+                        )}
                       </div>
                     </td>
                     <td className="py-4 px-6 text-slate-600">{u.phone || "Not Set"}</td>

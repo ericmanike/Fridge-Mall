@@ -191,6 +191,11 @@ export default function AdminOrdersPage() {
                       <div>
                         <p className="font-bold text-slate-850">{o.details.fullName}</p>
                         <p className="text-xs text-slate-500">{o.details.phone}</p>
+                        {o.referralCodeUsed && (
+                          <p className="mt-1 text-[10px] font-bold text-amber-600 font-mono">
+                            Ref: {o.referralCodeUsed}
+                          </p>
+                        )}
                       </div>
                     </td>
                     <td className="py-4 px-6 text-slate-600">

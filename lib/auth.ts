@@ -40,6 +40,8 @@ export const authOptions: NextAuthOptions = {
                     name: user.name,
                     email: user.email,
                     role: user.role,
+                    code: user.code,
+                    referredBy: user.referredBy,
                 };
             },
         }),
@@ -63,9 +65,13 @@ export const authOptions: NextAuthOptions = {
                         }) as any;
                         user.id = newUser._id.toString();
                         (user as any).role = newUser.role;
+                        (user as any).code = newUser.code;
+                        (user as any).referredBy = newUser.referredBy;
                     } else {
                         user.id = (existingUser as any)._id.toString();
                         (user as any).role = (existingUser as any).role;
+                        (user as any).code = (existingUser as any).code;
+                        (user as any).referredBy = (existingUser as any).referredBy;
                     }
                     return true;
                 } catch (error) {
@@ -79,14 +85,18 @@ export const authOptions: NextAuthOptions = {
             if (user) {
                 token.id = user.id;
                 token.role = (user as any).role;
+                token.code = (user as any).code;
+                token.referredBy = (user as any).referredBy;
             }
 
             // Support for updating the session securely from the DB
-            if (trigger === "update") {
+            if (trigger === "update" || !token.code) {
                 await dbConnect();
                 const dbUser = await User.findById(token.id);
                 if (dbUser) {
                     token.role = dbUser.role;
+                    token.code = dbUser.code;
+                    token.referredBy = dbUser.referredBy;
                 }
             }
 
@@ -96,6 +106,8 @@ export const authOptions: NextAuthOptions = {
             if (session.user) {
                 (session.user as any).id = token.id as string;
                 (session.user as any).role = token.role as string;
+                (session.user as any).code = token.code as string;
+                (session.user as any).referredBy = token.referredBy as string;
             }
             return session;
         },

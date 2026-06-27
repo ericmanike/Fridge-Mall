@@ -1,28 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Copy, Share2 } from "lucide-react";
-import {
-  REFERRAL_REWARD_AMOUNT,
-  getOrCreateReferralCode,
-  getReferralRewards,
-  getTotalReferralEarnings,
-} from "@/lib/referral";
-import { ReferralReward } from "@/lib/types";
+import { Copy, Share2, Loader2 } from "lucide-react";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { REFERRAL_REWARD_AMOUNT } from "@/lib/referral";
 import { formatCurrency } from "@/lib/utils";
 
 export default function ReferralPage() {
+  const { data: session, status } = useSession();
   const [code, setCode] = useState("");
-  const [rewards, setRewards] = useState<ReferralReward[]>([]);
+  const [rewards, setRewards] = useState<any[]>([]);
   const [totalEarnings, setTotalEarnings] = useState(0);
+  const [successfulReferralsCount, setSuccessfulReferralsCount] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    setCode(getOrCreateReferralCode());
-    setRewards(getReferralRewards());
-    setTotalEarnings(getTotalReferralEarnings());
-  }, []);
-
   const [copiedLink, setCopiedLink] = useState(false);
   const [baseUrl, setBaseUrl] = useState("");
 
@@ -31,6 +23,33 @@ export default function ReferralPage() {
       setBaseUrl(window.location.origin);
     }
   }, []);
+
+  useEffect(() => {
+    const fetchReferralData = async () => {
+      if (status !== "authenticated") {
+        setLoading(false);
+        return;
+      }
+      try {
+        const res = await fetch("/api/user/referrals");
+        if (res.ok) {
+          const data = await res.json();
+          setCode(data.code || "");
+          setRewards(data.rewards || []);
+          setTotalEarnings(data.totalEarnings || 0);
+          setSuccessfulReferralsCount(data.referredUsersCount || 0);
+        }
+      } catch (err) {
+        console.error("Error fetching referral data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (status !== "loading") {
+      fetchReferralData();
+    }
+  }, [status]);
 
   const referralLink = `${baseUrl}?refferedby=${code}`;
 
@@ -47,6 +66,42 @@ export default function ReferralPage() {
   }
 
   const shareText = `Get quality fridges with FREE delivery at Fridge Mall! Use my referral code ${code} when you order and I'll earn ${formatCurrency(REFERRAL_REWARD_AMOUNT)}. Shop now!`;
+
+  if (status === "loading" || (status === "authenticated" && loading)) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 bg-slate-50 min-h-[60vh]">
+        <Loader2 className="h-10 w-10 animate-spin text-[#0066FF]" />
+        <p className="mt-3 text-sm text-slate-500 font-bold">Loading your dashboard...</p>
+      </div>
+    );
+  }
+
+  if (status === "unauthenticated" || !session) {
+    return (
+      <div className="mx-auto w-full max-w-4xl bg-white px-4 py-20 text-center sm:px-6">
+        <div className="rounded-3xl bg-linear-to-br from-[#632cf5] to-[#4F46E5] p-10 text-white shadow-xl max-w-2xl mx-auto">
+          <h1 className="text-3xl font-extrabold tracking-tight">Refer &amp; Earn GHS 50</h1>
+          <p className="mt-4 text-purple-100/90 leading-relaxed text-sm">
+            Unlock your unique referral code and start earning commissions immediately. Share Fridge Mall with friends, and when they buy, you earn GHS 50 on their successful delivery!
+          </p>
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              href="/auth/login"
+              className="w-full sm:w-auto rounded-full bg-white text-[#4F46E5] hover:bg-purple-50 px-8 py-3.5 text-sm font-bold transition-all shadow-md hover:scale-[1.02] cursor-pointer"
+            >
+              Sign In to start
+            </Link>
+            <Link
+              href="/auth/signUp"
+              className="w-full sm:w-auto rounded-full border border-purple-200/50 bg-white/10 hover:bg-white/20 text-white px-8 py-3.5 text-sm font-bold transition-all hover:scale-[1.02] cursor-pointer"
+            >
+              Create an Account
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto w-full bg-white px-4 py-10 sm:px-6">
@@ -72,7 +127,7 @@ export default function ReferralPage() {
           </span>
           <button
             onClick={copyCode}
-            className="inline-flex items-center gap-2 rounded-xl bg-sky-600 px-4 py-3 text-sm font-semibold text-white hover:bg-sky-700"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#0066FF] px-4 py-3 text-sm font-semibold text-white hover:bg-[#0066ffbc] cursor-pointer transition"
           >
             <Copy className="h-4 w-4" />
             {copied ? "Copied!" : "Copy code"}
@@ -108,7 +163,7 @@ export default function ReferralPage() {
               setTimeout(() => setCopied(false), 2000);
             }
           }}
-          className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition"
         >
           <Share2 className="h-4 w-4" />
           Share with friends
@@ -125,7 +180,7 @@ export default function ReferralPage() {
         <div className="rounded-2xl border border-slate-200 bg-white p-6">
           <p className="text-sm text-slate-600">Successful referrals</p>
           <p className="mt-1 text-3xl font-bold text-slate-900">
-            {rewards.length}
+            {successfulReferralsCount}
           </p>
         </div>
       </div>
@@ -156,14 +211,16 @@ export default function ReferralPage() {
             {rewards.map((reward) => (
               <li
                 key={reward.id}
-                className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm"
+                className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm animate-in fade-in"
               >
-                <span className="text-slate-600">
-                  Order {reward.orderId} ·{" "}
-                  {new Date(reward.createdAt).toLocaleDateString("en-GH")}
-                </span>
-                <span className="font-bold text-emerald-600">
-                  +{formatCurrency(reward.amount)}
+                <div className="flex flex-col">
+                  <span className="font-bold text-slate-800">Order {reward.orderId}</span>
+                  <span className="text-xs text-slate-500">
+                    {new Date(reward.createdAt).toLocaleDateString("en-GH")} · Status: <span className="capitalize font-semibold text-slate-650">{reward.status}</span>
+                  </span>
+                </div>
+                <span className={`font-bold ${reward.status === "delivered" ? "text-emerald-600" : "text-amber-500"}`}>
+                  {reward.status === "delivered" ? "+" : ""}{formatCurrency(reward.amount)}
                 </span>
               </li>
             ))}

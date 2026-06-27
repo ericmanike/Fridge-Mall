@@ -3,16 +3,50 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Check } from "lucide-react";
 import AddToCartButton from "@/components/AddToCartButton";
-import { getProductById } from "@/lib/products";
 import { formatCurrency } from "@/lib/utils";
+import dbConnect from "@/lib/mongoose";
+import ProductModel from "@/models/Products";
+import { products as staticProducts } from "@/lib/products";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
 }
 
+async function fetchProduct(id: string) {
+  // 1. Try static list first
+  const staticProduct = staticProducts.find((p) => p.id === id);
+  if (staticProduct) {
+    return staticProduct;
+  }
+
+  // 2. Try database
+  try {
+    await dbConnect();
+    const dbProduct = await ProductModel.findById(id);
+    if (dbProduct) {
+      return {
+        id: dbProduct._id.toString(),
+        name: dbProduct.name,
+        brand: dbProduct.brand,
+        price: dbProduct.price,
+        capacity: dbProduct.capacity,
+        energyRating: dbProduct.energyRating,
+        description: dbProduct.description,
+        features: dbProduct.features,
+        image: dbProduct.image,
+        inStock: dbProduct.inStock,
+      };
+    }
+  } catch (err) {
+    console.error("Error fetching product from DB:", err);
+  }
+
+  return undefined;
+}
+
 export async function generateMetadata({ params }: ProductPageProps) {
   const { id } = await params;
-  const product = getProductById(id);
+  const product = await fetchProduct(id);
   if (!product) return { title: "Product not found" };
   return {
     title: `${product.name} | Fridge Mall`,
@@ -22,11 +56,11 @@ export async function generateMetadata({ params }: ProductPageProps) {
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { id } = await params;
-  const product = getProductById(id);
+  const product = await fetchProduct(id);
   if (!product) notFound();
 
   return (
-    <div className="mx-auto width-full bg-[#E2E8F0] px-4 py-10 sm:px-6">
+    <div className="mx-auto w-full bg-[#E2E8F0] px-4 py-10 sm:px-6">
       <Link
         href="/products"
         className="text-sm font-medium text-[#0066FF] hover:text-[#0066ffbc]"
@@ -42,14 +76,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <Image
             src={product.image}
             alt={product.name}
-            width={200}
-            height={300}
-            className="object-contain"
+            width={600}
+            height={600}
+            className="object-cover"
           />
         </div>
 
         <div>
-          <p className="text-sm font-semibold uppercase tracking-wide text-sky-600">
+          <p className="text-sm font-semibold uppercase tracking-wide text-[#0066FF]">
             {product.brand}
           </p>
           <h1 className="mt-2 text-3xl font-bold text-slate-900">

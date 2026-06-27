@@ -23,7 +23,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           className="object-contain transition group-hover:scale-105"
         />
         {!product.inStock && (
-          <span className="absolute right-3 top-3 rounded-full bg-slate-800 px-2 py-0.5 text-xs font-medium text-white">
+          <span className="absolute right-3 top-3 rounded-full bg-red-700 px-2 py-0.5 text-xs font-medium text-white">
             Out of stock
           </span>
         )}

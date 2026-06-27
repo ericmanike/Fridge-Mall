@@ -51,10 +51,30 @@ export async function POST(req: Request) {
     await dbConnect();
 
     let userId;
+    let customerCode = null;
+    let finalReferralCode = referralCodeUsed;
+
     if (session?.user?.email) {
       const dbUser = await User.findOne({ email: session.user.email });
       if (dbUser) {
         userId = dbUser._id;
+        customerCode = dbUser.code;
+        if (!finalReferralCode && dbUser.referredBy) {
+          finalReferralCode = dbUser.referredBy;
+        }
+      }
+    }
+
+    // Prevent self-referrals
+    if (finalReferralCode && customerCode === finalReferralCode) {
+      finalReferralCode = undefined;
+    }
+
+    // Double check that the referrer actually exists in the database
+    if (finalReferralCode) {
+      const referrerExists = await User.findOne({ code: finalReferralCode });
+      if (!referrerExists) {
+        finalReferralCode = undefined;
       }
     }
 
@@ -78,7 +98,8 @@ export async function POST(req: Request) {
       total,
       paymentMethod,
       status: status || "pending",
-      referralCodeUsed,
+      referralCodeUsed: finalReferralCode,
+      referralRewarded: false,
     });
 
     return NextResponse.json({ message: "Order stored in database", order: newOrder }, { status: 201 });
@@ -118,6 +139,18 @@ export async function PUT(req: Request) {
 
     if (!updatedOrder) {
       return NextResponse.json({ message: "Order not found" }, { status: 404 });
+    }
+
+    // Process referral reward if order is delivered and not yet rewarded
+    if (status === "delivered" && updatedOrder.referralCodeUsed && !updatedOrder.referralRewarded) {
+      const referrer = await User.findOne({ code: updatedOrder.referralCodeUsed });
+      if (referrer) {
+        referrer.walletBalance = (referrer.walletBalance || 0) + 50;
+        await referrer.save();
+
+        updatedOrder.referralRewarded = true;
+        await updatedOrder.save();
+      }
     }
 
     return NextResponse.json({ message: "Order status updated successfully", order: updatedOrder });

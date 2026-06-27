@@ -16,6 +16,7 @@ import {
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { formatCurrency } from "@/lib/utils";
+import { CldUploadWidget } from "next-cloudinary";
 
 interface Product {
   id: string;
@@ -400,16 +401,54 @@ export default function AdminProductsPage() {
               </label>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                <label className="block">
-                  <span className="text-xs font-bold text-slate-600">Image Asset Path</span>
+                <div className="space-y-2">
+                  <span className="text-xs font-bold text-slate-600 flex items-center gap-1.5">
+                    Product Image
+                  </span>
+                  <div className="flex items-center gap-3">
+                    {/* Image Preview */}
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+                      {image ? (
+                        <img src={image} alt="Preview" className="h-full w-full object-contain" />
+                      ) : (
+                        <span className="text-slate-350 text-[10px] font-bold">No Image</span>
+                      )}
+                    </div>
+
+                    {/* Next-Cloudinary CldUploadWidget */}
+                    <div className="flex-1">
+                      <CldUploadWidget
+                        uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "fridgemall_products"}
+                        onSuccess={(result) => {
+                          if (result.info && typeof result.info !== "string") {
+                            setImage(result.info.secure_url);
+                            toast.success("Image uploaded successfully!");
+                          }
+                        }}
+                      >
+                        {({ open }) => (
+                          <button
+                            type="button"
+                            onClick={() => open()}
+                            className="relative flex w-full cursor-pointer items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white hover:bg-slate-50 px-3 py-2.5 text-xs font-bold text-slate-700 transition select-none active:scale-[0.98]"
+                          >
+                            <span>Upload Image</span>
+                          </button>
+                        )}
+                      </CldUploadWidget>
+                    </div>
+                  </div>
+
+                  {/* Manual input override */}
                   <input
                     type="text"
                     required
                     value={image}
                     onChange={(e) => setImage(e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    placeholder="Or enter image URL manually..."
+                    className="w-full rounded-lg border border-slate-200 px-3 py-1.5 text-xs outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
-                </label>
+                </div>
                 <div className="flex items-center gap-3 mt-6">
                   <input
                     type="checkbox"

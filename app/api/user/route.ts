@@ -26,6 +26,8 @@ export async function GET() {
       role: user.role,
       walletBalance: user.walletBalance,
       phone: user.phone || "",
+      code: user.code || "",
+      referredBy: user.referredBy || "",
       createdAt: user.createdAt,
     });
   } catch (error: any) {

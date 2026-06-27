@@ -31,6 +31,7 @@ export interface IOrder extends Document {
   paymentMethod: "cod";
   status: "pending" | "confirmed" | "delivered";
   referralCodeUsed?: string;
+  referralRewarded: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -72,6 +73,7 @@ const OrderSchema = new Schema<IOrder>(
       default: "pending",
     },
     referralCodeUsed: { type: String },
+    referralRewarded: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

@@ -6,7 +6,7 @@ import { authOptions } from "@/lib/auth";
 
 export async function POST(req: Request) {
     try {
-        const { name, email, password, phone } = await req.json();
+        const { name, email, password, phone, referredBy } = await req.json();
 
         if (!name || !email || !password || !phone) {
             return NextResponse.json(
@@ -25,6 +25,15 @@ export async function POST(req: Request) {
             );
         }
 
+        // Validate referredBy code if provided
+        let validReferredBy = undefined;
+        if (referredBy) {
+            const referrer = await User.findOne({ code: referredBy });
+            if (referrer) {
+                validReferredBy = referredBy;
+            }
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = await User.create({
@@ -32,6 +41,7 @@ export async function POST(req: Request) {
             email,
             password: hashedPassword,
             phone,
+            referredBy: validReferredBy,
         });
 
         return NextResponse.json(
