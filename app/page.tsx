@@ -133,11 +133,11 @@ export default async function Home() {
       {/* Left Column (Text & Button) */}
       <div className="lg:col-span-5 flex flex-col justify-center items-start">
         <h2 className="text-4xl font-extrabold sm:text-5xl md:text-6xl tracking-tight leading-[1.15] text-white">
-          Shop the world. <br />
-          Ship for free.
+          Shop the Best. <br />
+          Pay on delivery.
         </h2>
         <p className="mt-4 text-lg text-purple-100/90 max-w-md">
-          Discover international finds with free shipping included.
+          Discover international brands with discount.
         </p>
         <div className="mt-8">
           <Link

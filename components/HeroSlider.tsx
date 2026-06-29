@@ -68,7 +68,7 @@ export default function HeroSlider({
   };
 
   return (
-    <div className="relative w-full h-[250px] sm:h-[350px] lg:h-[450px] overflow-hidden bg-slate-900 select-none mt-10">
+    <div className="relative w-full h-[250px] sm:h-[350px] lg:h-[450px] overflow-hidden bg-slate-900 select-none ">
       {/* Slides container */}
       <div 
         className="flex w-full h-full transition-transform duration-500 ease-in-out"

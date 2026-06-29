@@ -29,15 +29,15 @@ export default function AddToCartButton({
     <button
       onClick={handleClick}
       disabled={!product.inStock}
-      className={`rounded-[10px] px-6 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 ${
+      className={` text-black  border-1 mt-3 rounded-[15px] px-6 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 ${
         added
-          ? "bg-emerald-600 text-white"
-          : "bg-green-500 text-white hover:bg-green-600"
+          ? " hover:bg-blue-600  hover:text-white"
+          : "hover:bg-blue-600 hover:text-white"
       } ${className}`}
     >
       {added ? (
         <span className="inline-flex items-center gap-2">
-          Added to cart <Check className="h-4 w-4" />
+          Added<Check className="h-4 w-4" />
         </span>
       ) : product.inStock ? (
         "Add to cart"

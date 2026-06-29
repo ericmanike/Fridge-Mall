@@ -14,14 +14,13 @@ export default function ProductCard({ product }: ProductCardProps) {
       href={`/products/${product.id}`}
       className="group flex flex-col overflow-hidden rounded-[10px] bg-white shadow-lg transition hover:border-sky-200 hover:shadow-md"
     >
-      <div className="relative flex h-48 items-center justify-center bg-linear-to-b from-sky-50 to-white p-6">
+      <div className="relative flex h-48  items-center justify-center bg-linear-to-b from-sky-50 to-white ">
         <Image
           src={product.image}
           alt={product.name}
-          width={120}
-          height={180}
-          className="object-contain transition group-hover:scale-105"
-        />
+         fill
+          className="object-cover overflow-hidden transition group-hover:scale-105  "
+        /> 
         {!product.inStock && (
           <span className="absolute right-3 top-3 rounded-full bg-red-700 px-2 py-0.5 text-xs font-medium text-white">
             Out of stock
@@ -41,7 +40,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <span>{product.energyRating}</span>
         </div>
         <div className=" h-fit grid grid-cols-1 w-full m-auto justify-center items-center">
-        <p className=" pt-3 text-[14px] text-center font-bold text-slate-900">
+        <p className=" pt-3 text-[16px]  font-bold text-slate-900">
           {formatCurrency(product.price)}
         </p>
         <AddToCartButton product={product} />

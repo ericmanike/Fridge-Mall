@@ -66,7 +66,7 @@ export default async function ProductsPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-900">Shop fridges</h1>
         <p className="mt-2 text-slate-600">
-          {products.length} models available · Free delivery · Pay on delivery
+          {products.length} models available · Pay on delivery
         </p>
       </div>
       <div className="grid gap-6 grid-cols-2 md:grid-cols-4">

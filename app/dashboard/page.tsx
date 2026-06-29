@@ -214,7 +214,7 @@ export default function DashboardIndexPage() {
         </div>
 
         {/* Developer Tools */}
-        <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6">
+        {/* <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6">
           <div className="flex items-center gap-2 text-slate-800 mb-2">
             <ShieldAlert className="h-5 w-5 text-blue-600" />
             <h3 className="font-bold text-base">Development Playground</h3>
@@ -231,7 +231,7 @@ export default function DashboardIndexPage() {
               Toggle Admin / User Role
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

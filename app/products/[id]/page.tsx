@@ -76,11 +76,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <Image
             src={product.image}
             alt={product.name}
-            width={600}
-            height={600}
-            className="object-cover"
+            width={500}
+            height={400}  
+            className="object-cover"  
           />
-        </div>
+        </div> 
 
         <div>
           <p className="text-sm font-semibold uppercase tracking-wide text-[#0066FF]">
@@ -100,9 +100,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
               Energy {product.energyRating}
             </span>
-            <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
-              Free delivery
-            </span>
+       
             <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
               Pay on delivery
             </span>
