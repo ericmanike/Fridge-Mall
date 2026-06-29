@@ -5,9 +5,11 @@ import Link from "next/link";
 import { Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import { formatCurrency } from "@/lib/utils";
+import {useSession} from "next-auth/react";
 
 export default function CartPage() {
   const { items, subtotal, updateQuantity, removeFromCart } = useCart();
+  const session = useSession();
 
   if (items.length === 0) {
     return (
@@ -71,7 +73,7 @@ export default function CartPage() {
                     >
                       <Minus className="h-4 w-4" />
                     </button>
-                    <span className="px-3 py-1 text-sm font-medium">
+                    <span className="px-3 py-1 text-slate-800 text-sm font-medium">
                       {quantity}
                     </span>
                     <button
@@ -114,10 +116,14 @@ export default function CartPage() {
             </div>
           </div>
           <Link
-            href="/checkout"
+            href={session.data ? "/checkout" : "/auth/signIn"}
             className="mt-6 block w-full rounded-xl bg-[#0066FF] py-3 text-center text-sm font-semibold text-white hover:bg-[#0066ffbc]"
+          onClick={() => {
+            sessionStorage.setItem("callbackUrl", "/checkout");
+            }
+          } 
           >
-            Proceed to checkout
+           {session.data ? "Complete Order" : "Sign in to Complete Order"}
           </Link>
         </div>
       </div>

@@ -54,7 +54,8 @@ export default function SignUpPage() {
    const Loginres =  await signIn("credentials",{
           email,
           password,
-          redirect:false,
+          redirect:true,
+          callbackUrl: sessionStorage.getItem("callbackUrl") || "/dashboard",  
              }
              )
             if (Loginres?.error) {

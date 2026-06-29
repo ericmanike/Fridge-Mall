@@ -84,12 +84,12 @@ export default function CheckoutPage() {
     <div className="mx-auto w-full bg-[#E2E8F0] px-4 py-10 sm:px-6">
       <h1 className="text-3xl font-bold text-slate-900">Checkout</h1>
       <p className="mt-1 text-slate-600">
-        Free delivery · Pay on delivery (cash or MoMo)
+        Pay on delivery (cash or MoMo)
       </p>
 
       <form onSubmit={handleSubmit} className="mt-8 grid gap-8 lg:grid-cols-3">
-        <div className="space-y-4 lg:col-span-2">
-          <div className="rounded-2xl border border-slate-200 bg-white p-6">
+        <div className=" text-slate-900 space-y-4 lg:col-span-2">
+          <div className=" rounded-2xl border border-slate-200 bg-white p-6">
             <h2 className="font-bold text-slate-900">Delivery details</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <label className="block sm:col-span-2">

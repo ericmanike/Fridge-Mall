@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { Check, Phone, Mail, MapPin, ChevronRight, Truck, Banknote, Gift } from "lucide-react";
 import { usePathname } from "next/navigation";
-
+import Image from "next/image";
 export default function Footer() {
   const pathname = usePathname();
   
@@ -22,13 +22,13 @@ export default function Footer() {
   }
 
   return (
-    <footer className="mt-auto border-t border-emerald-900/30 bg-[#091E3A]  text-slate-350">
+    <footer className="mt-auto border-t border-emerald-900/30 bg-[#252260]  text-slate-350">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
           {/* Brand Info */}
           <div className="space-y-3">
             <p className="text-xl font-bold text-white tracking-tight">
-              Fridge <span className="text-emerald-400 font-black">Mall</span>
+            <Image src={'/footerlogo.png'} width={160} height={120} alt=" Fridge Mall logo"  />
             </p>
             <p className="text-sm text-slate-300/90 leading-relaxed">
               Ghana&apos;s trusted online fridge store. Browse, order, and pay
