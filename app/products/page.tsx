@@ -1,4 +1,4 @@
-import ProductCard from "@/components/ProductCard";
+import ProductsListClient from "@/components/ProductsListClient";
 import dbConnect from "@/lib/mongoose";
 import ProductModel from "@/models/Products";
 import { products as staticProducts } from "@/lib/products";
@@ -62,18 +62,14 @@ export default async function ProductsPage() {
   }
 
   return (
-    <div className="px-3 w-full md:px-19 py-10  bg-[#E2E8F0]">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Shop fridges</h1>
-        <p className="mt-2 text-slate-600">
-          {products.length} models available · Pay on delivery
+    <div className="px-4 w-full md:px-16 py-10 bg-slate-100 min-h-screen">
+      <div className="mb-6">
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight">Shop fridges</h1>
+        <p className="mt-1 text-sm text-slate-600">
+          Find your ideal refrigerator with pay on delivery across Ghana.
         </p>
       </div>
-      <div className="grid gap-6 grid-cols-2 md:grid-cols-4">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+      <ProductsListClient products={products} />
     </div>
   );
 }

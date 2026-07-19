@@ -8,6 +8,11 @@ import dbConnect from "@/lib/mongoose";
 import ProductModel from "@/models/Products";
 import { products as staticProducts } from "@/lib/products";
 
+
+
+
+
+
 interface ProductPageProps {
   params: Promise<{ id: string }>;
 }

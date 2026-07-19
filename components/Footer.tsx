@@ -65,7 +65,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/referral" className="flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors duration-150">
+                <Link href="/dashboard/referral" className="flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors duration-150">
                   <ChevronRight className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
                   Refer &amp; earn GHS 50
                 </Link>
@@ -103,7 +103,7 @@ export default function Footer() {
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-950/60 border border-emerald-800/40 text-emerald-400 shrink-0">
                   <Gift className="h-3.5 w-3.5" />
                 </div>
-                <Link href="/referral" className="hover:text-white transition-colors duration-150">
+                <Link href="/dashboard/referral" className="hover:text-white transition-colors duration-150">
                   GHS 50 instant reward
                 </Link>
               </li>
@@ -141,8 +141,8 @@ export default function Footer() {
         <div className="mt-10 border-t border-emerald-900/30 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
           <p>© {new Date().getFullYear()} Fridge Mall. All rights reserved.</p>
           <div className="flex gap-4">
-            <span className="hover:text-white cursor-pointer transition-colors">Privacy Policy</span>
-            <span className="hover:text-white cursor-pointer transition-colors">Terms of Service</span>
+            <Link href="/about" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/about" className="hover:text-white transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>
