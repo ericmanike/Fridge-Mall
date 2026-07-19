@@ -18,7 +18,9 @@ export default function Footer() {
     pathname === "/admin" || 
     pathname === "/admin/products" || 
     pathname === "/admin/orders" || 
-    pathname === "/admin/users"
+    pathname === "/admin/users"  ||
+    pathname === "/admin/withdrawals"
+
   ) {
     return null;
   }

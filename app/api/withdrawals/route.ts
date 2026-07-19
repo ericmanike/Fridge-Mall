@@ -41,9 +41,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const { amount, referralCode } = await req.json();
-    if (typeof amount !== "number" || amount <= 0 || !referralCode) {
-      return NextResponse.json({ message: "Invalid amount or referral code" }, { status: 400 });
+    const { amount, referralCode, momoNumber, beneficiaryName } = await req.json();
+    const numericAmount = Number(amount);
+
+    if (isNaN(numericAmount) || numericAmount < 50) {
+      return NextResponse.json({ message: "Minimum withdrawal amount is GHS 50.00" }, { status: 400 });
+    }
+
+    if (!referralCode) {
+      return NextResponse.json({ message: "Missing referral code" }, { status: 400 });
+    }
+
+    if (!momoNumber || !momoNumber.trim() || !beneficiaryName || !beneficiaryName.trim()) {
+      return NextResponse.json({ message: "MoMo number and beneficiary name are required" }, { status: 400 });
     }
 
     await dbConnect();
@@ -52,11 +62,22 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    const walletBalance = currentUser.walletBalance || 0;
+    const code = currentUser.code ? currentUser.code.trim() : "";
+    const userOrdersCount = code
+      ? await Order.countDocuments({ referralCodeUsed: { $regex: new RegExp(`^${code}$`, "i") } })
+      : 0;
+    const totalEarned = Math.max(currentUser.walletBalance || 0, userOrdersCount * 50);
 
-    if (amount > walletBalance) {
+    const existingRequests = await WithdrawalRequest.find({
+      userId: currentUser._id,
+      status: { $in: ["pending", "approved"] },
+    });
+    const totalRequested = existingRequests.reduce((sum, r) => sum + r.amount, 0);
+    const withdrawableBalance = Math.max(0, totalEarned - totalRequested);
+
+    if (numericAmount > withdrawableBalance) {
       return NextResponse.json(
-        { message: `Insufficient earnings. Max withdrawable balance: GHS ${walletBalance.toFixed(2)}` },
+        { message: `Insufficient earnings. Available withdrawable balance: GHS ${withdrawableBalance.toFixed(2)}` },
         { status: 400 }
       );
     }
@@ -65,7 +86,9 @@ export async function POST(req: Request) {
       userId: currentUser._id,
       userName: currentUser.name,
       userEmail: currentUser.email,
-      amount,
+      amount: numericAmount,
+      momoNumber: momoNumber.trim(),
+      beneficiaryName: beneficiaryName.trim(),
       status: "pending",
     });
 
@@ -116,3 +139,37 @@ export async function PUT(req: Request) {
     return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    await dbConnect();
+    const currentUser = await User.findOne({ email: session.user.email });
+    if (!currentUser || currentUser.role !== "admin") {
+      return NextResponse.json({ message: "Forbidden: Admins only" }, { status: 403 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json({ message: "Missing request id" }, { status: 400 });
+    }
+
+    const deletedRequest = await WithdrawalRequest.findByIdAndDelete(id);
+
+    if (!deletedRequest) {
+      return NextResponse.json({ message: "Withdrawal request not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Withdrawal request deleted successfully" });
+  } catch (error: any) {
+    console.error("DELETE withdrawals API error:", error);
+    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+  }
+}
+

@@ -116,7 +116,7 @@ export default async function Home() {
    <h1 className=" text-2xl text-slate-600 font-extrabold"> Refer And Earn</h1>
  <h2 className="font-semibold twxt-1xl"> Refer a friend and earn GHS 50 instantly.</h2>
  </div>
- <Link href="/referral" className=" mt-2 max-h-11 flex items-center justify-center  text-[white] px-4 md:px-6 py-2 bg-[#000000] rounded-3xl text-2xl"> Start now</Link>
+ <Link href="/dashboard/referral" className=" mt-2 max-h-11 flex items-center justify-center  text-[white] px-4 md:px-6 py-2 bg-[#000000] rounded-3xl text-2xl"> Start now</Link>
 
 
    </div>

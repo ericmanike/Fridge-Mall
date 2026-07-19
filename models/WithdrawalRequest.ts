@@ -6,6 +6,8 @@ export interface IWithdrawalRequest extends Document {
   userEmail: string;
   amount: number;
   status: 'pending' | 'approved' | 'rejected';
+  momoNumber?: string;
+  beneficiaryName?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -17,6 +19,8 @@ const WithdrawalRequestSchema = new Schema<IWithdrawalRequest>(
     userEmail: { type: String, required: true },
     amount: { type: Number, required: true },
     status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
+    momoNumber: { type: String, required: false },
+    beneficiaryName: { type: String, required: false },
   },
   { timestamps: true }
 );
