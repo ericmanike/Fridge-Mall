@@ -32,8 +32,8 @@ const heroSlides = [
 
 const perks: { title: string; description: string; Icon: LucideIcon }[] = [
   {
-    title: "Free delivery",
-    description: "We deliver anywhere in Ghana at no extra cost.",
+    title: "Nationwide delivery",
+    description: "We deliver across Accra, Kumasi, and all regions in Ghana.",
     Icon: Truck,
   },
   {

@@ -36,7 +36,7 @@ export default function Footer() {
             </p>
             <p className="text-sm text-slate-300/90 leading-relaxed">
               Ghana&apos;s trusted online fridge store. Browse, order, and pay
-              when we deliver to your door — delivery is always free.
+              when we deliver to your door.
             </p>
           </div>
 
@@ -50,6 +50,18 @@ export default function Footer() {
                 <Link href="/products" className="flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors duration-150">
                   <ChevronRight className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
                   Shop fridges
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors duration-150">
+                  <ChevronRight className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                  About us
+                </Link>
+              </li>
+              <li>
+                <Link href="/about#faqs" className="flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors duration-150">
+                  <ChevronRight className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                  Pay on Delivery FAQs
                 </Link>
               </li>
               <li>
@@ -83,13 +95,17 @@ export default function Footer() {
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-950/60 border border-emerald-800/40 text-emerald-400 shrink-0">
                   <Banknote className="h-3.5 w-3.5" />
                 </div>
-                <span>Pay on delivery (cash/MoMo)</span>
+                <Link href="/about#faqs" className="hover:text-white transition-colors duration-150">
+                  Pay on delivery (cash/MoMo)
+                </Link>
               </li>
               <li className="flex items-center gap-2.5 text-slate-300">
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-950/60 border border-emerald-800/40 text-emerald-400 shrink-0">
                   <Gift className="h-3.5 w-3.5" />
                 </div>
-                <span>GHS 50 instant reward</span>
+                <Link href="/referral" className="hover:text-white transition-colors duration-150">
+                  GHS 50 instant reward
+                </Link>
               </li>
             </ul>
           </div>
@@ -104,7 +120,7 @@ export default function Footer() {
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-950/60 border border-emerald-800/40 text-emerald-400">
                   <Phone className="h-3.5 w-3.5" />
                 </div>
-                <span>+233 24 123 4567</span>
+                <span>+233 24 757 4980</span>
               </li>
               <li className="flex items-center gap-2.5 text-slate-300">
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-950/60 border border-emerald-800/40 text-emerald-400">
