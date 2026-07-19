@@ -84,25 +84,25 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Stats Cards Grid */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => {
           const Icon = stat.Icon;
           return (
             <div
               key={stat.label}
-              className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs"
+              className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs"
             >
               <div className="flex items-center justify-between">
-                <span className="text-sm font-bold text-slate-400 uppercase tracking-wider">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                   {stat.label}
                 </span>
-                <div className={`rounded-xl p-2.5 ${stat.color}`}>
-                  <Icon className="h-5 w-5" />
+                <div className={`rounded-lg p-1.5 ${stat.color}`}>
+                  <Icon className="h-4 w-4" />
                 </div>
               </div>
-              <div className="mt-4">
-                <span className="text-3xl font-black text-slate-900">{stat.value}</span>
-                <p className="mt-1 text-xs text-slate-500">{stat.description}</p>
+              <div className="mt-2.5">
+                <span className="text-2xl font-black text-slate-900">{stat.value}</span>
+                <p className="mt-0.5 text-[11px] text-slate-500">{stat.description}</p>
               </div>
             </div>
           );
@@ -110,28 +110,28 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Order Status Breakdown */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-6">
-        <h3 className="text-base font-bold text-slate-800 mb-4">Orders  Summary</h3>
-        <div className="grid gap-4 sm:grid-cols-3">
-          <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-50">
-            <AlertCircle className="h-5 w-5 text-amber-500 shrink-0" />
+      <div className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+        <h3 className="text-sm font-bold text-slate-800 mb-3">Orders Summary</h3>
+        <div className="grid gap-3 sm:grid-cols-3">
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-50">
+            <AlertCircle className="h-4 w-4 text-amber-500 shrink-0" />
             <div>
-              <p className="text-[11px] font-bold text-slate-400 uppercase">Pending Verification</p>
-              <p className="text-lg font-bold text-slate-800">{pendingOrders} orders</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase">Pending Verification</p>
+              <p className="text-base font-bold text-slate-800">{pendingOrders} orders</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-50">
-            <Truck className="h-5 w-5 text-blue-500 shrink-0" />
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-50">
+            <Truck className="h-4 w-4 text-blue-500 shrink-0" />
             <div>
-              <p className="text-[11px] font-bold text-slate-400 uppercase">Confirmed &amp; Shipping</p>
-              <p className="text-lg font-bold text-slate-800">{confirmedOrders} orders</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase">Confirmed &amp; Shipping</p>
+              <p className="text-base font-bold text-slate-800">{confirmedOrders} orders</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-50">
-            <CheckCircle className="h-5 w-5 text-emerald-500 shrink-0" />
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-50">
+            <CheckCircle className="h-4 w-4 text-emerald-500 shrink-0" />
             <div>
-              <p className="text-[11px] font-bold text-slate-400 uppercase">Completed Deliveries</p>
-              <p className="text-lg font-bold text-slate-800">{deliveredOrders} orders</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase">Completed Deliveries</p>
+              <p className="text-base font-bold text-slate-800">{deliveredOrders} orders</p>
             </div>
           </div>
         </div>
