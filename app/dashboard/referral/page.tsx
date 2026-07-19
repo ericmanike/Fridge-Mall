@@ -1,21 +1,18 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Gift, Copy, Check, TrendingUp, Users, ShoppingBag } from "lucide-react";
+import { Gift, Copy, Check, Users } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {
-  REFERRAL_REWARD_AMOUNT,
-  getOrCreateReferralCode,
-  getReferralRewards,
-  getTotalReferralEarnings,
-} from "@/lib/referral";
+import { REFERRAL_REWARD_AMOUNT } from "@/lib/referral";
 import { ReferralReward } from "@/lib/types";
 import { formatCurrency } from "@/lib/utils";
 
 export default function ReferralDashboardPage() {
   const [code, setCode] = useState("");
   const [rewards, setRewards] = useState<ReferralReward[]>([]);
+  const [referredUsers, setReferredUsers] = useState<any[]>([]);
+  const [referredUsersCount, setReferredUsersCount] = useState(0);
   const [totalEarnings, setTotalEarnings] = useState(0);
   const [copied, setCopied] = useState(false);
   const [withdrawalRequests, setWithdrawalRequests] = useState<any[]>([]);
@@ -36,11 +33,25 @@ export default function ReferralDashboardPage() {
   };
 
   useEffect(() => {
-    setCode(getOrCreateReferralCode());
-    setRewards(getReferralRewards());
-    setTotalEarnings(getTotalReferralEarnings());
+    fetchRewards();
     fetchWithdrawals();
   }, []);
+
+  const fetchRewards = async () => {
+    try {
+      const res = await fetch("/api/referrals");
+      if (res.ok) {
+        const data = await res.json();
+        setCode(data.code || "");
+        setRewards(data.rewards || []);
+        setReferredUsers(data.referredUsers || []);
+        setReferredUsersCount(data.successfulReferralsCount ?? data.referredUsers?.length ?? 0);
+        setTotalEarnings(data.totalEarnings || 0);
+      }
+    } catch (err) {
+      console.error("Error fetching referrals:", err);
+    }
+  };
 
   const [copiedLink, setCopiedLink] = useState(false);
   const [baseUrl, setBaseUrl] = useState("");
@@ -71,10 +82,7 @@ export default function ReferralDashboardPage() {
     }
   };
 
-  const totalRequested = withdrawalRequests
-    .filter((r) => r.status === "pending" || r.status === "approved")
-    .reduce((sum, r) => sum + r.amount, 0);
-  const withdrawableEarnings = Math.max(0, totalEarnings - totalRequested);
+  const withdrawableEarnings = totalEarnings;
 
   const handleWithdraw = async () => {
     if (withdrawableEarnings <= 0) {
@@ -170,11 +178,38 @@ export default function ReferralDashboardPage() {
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs flex items-center justify-between">
         <div>
           <p className="text-sm font-semibold text-slate-500">Successful Invites</p>
-          <p className="mt-1 text-3xl font-black text-slate-900">{rewards.length}</p>
+          <p className="mt-1 text-3xl font-black text-slate-900">{referredUsersCount}</p>
         </div>
         <div className="rounded-xl p-3 bg-blue-50 text-blue-600">
           <Users className="h-6 w-6" />
         </div>
+      </div>
+
+      {/* Referred Users List */}
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
+        <h3 className="text-lg font-bold text-slate-900 mb-4">Referred Accounts</h3>
+        {referredUsers.length === 0 ? (
+          <div className="py-6 text-center text-slate-400 text-sm">
+            No users have signed up with your referral code yet.
+          </div>
+        ) : (
+          <ul className="space-y-3 divide-y divide-slate-50">
+            {referredUsers.map((user) => (
+              <li
+                key={user._id || user.email}
+                className="flex items-center justify-between py-3.5 first:pt-0"
+              >
+                <div>
+                  <p className="font-bold text-slate-800">{user.name}</p>
+                  <p className="text-xs text-slate-500">{user.email}</p>
+                </div>
+                <span className="text-xs font-semibold text-slate-400">
+                  Joined {new Date(user.createdAt).toLocaleDateString("en-GH")}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       {/* Referral Logs */}

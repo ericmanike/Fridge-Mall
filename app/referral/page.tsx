@@ -11,6 +11,7 @@ export default function ReferralPage() {
   const { data: session, status } = useSession();
   const [code, setCode] = useState("");
   const [rewards, setRewards] = useState<any[]>([]);
+  const [referredUsers, setReferredUsers] = useState<any[]>([]);
   const [totalEarnings, setTotalEarnings] = useState(0);
   const [successfulReferralsCount, setSuccessfulReferralsCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -31,13 +32,14 @@ export default function ReferralPage() {
         return;
       }
       try {
-        const res = await fetch("/api/user/referrals");
+        const res = await fetch("/api/referrals");
         if (res.ok) {
           const data = await res.json();
           setCode(data.code || "");
           setRewards(data.rewards || []);
+          setReferredUsers(data.referredUsers || []);
           setTotalEarnings(data.totalEarnings || 0);
-          setSuccessfulReferralsCount(data.referredUsersCount || 0);
+          setSuccessfulReferralsCount(data.successfulReferralsCount || data.referredUsers?.length || 0);
         }
       } catch (err) {
         console.error("Error fetching referral data:", err);
@@ -203,6 +205,28 @@ export default function ReferralPage() {
           ))}
         </ol>
       </div>
+
+      {referredUsers.length > 0 && (
+        <div className="mt-8">
+          <h2 className="font-bold text-slate-900 mb-4">Referred Accounts</h2>
+          <ul className="space-y-2">
+            {referredUsers.map((user) => (
+              <li
+                key={user._id || user.email}
+                className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm animate-in fade-in"
+              >
+                <div className="flex flex-col">
+                  <span className="font-bold text-slate-800">{user.name}</span>
+                  <span className="text-xs text-slate-500">{user.email}</span>
+                </div>
+                <span className="text-xs font-medium text-slate-400">
+                  Joined {new Date(user.createdAt).toLocaleDateString("en-GH")}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {rewards.length > 0 && (
         <div className="mt-8">

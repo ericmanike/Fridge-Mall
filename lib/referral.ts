@@ -1,8 +1,30 @@
+
 import { ReferralReward } from "./types";
+import dbConnect from './mongoose';
+import User from '@/models/User';
+import { getSession } from "next-auth/react";
+import { authOptions } from "./auth";
 
 export const REFERRAL_REWARD_AMOUNT = 50;
 export const REFERRAL_CODE_KEY = "fridgemall-referral-code";
 export const REFERRAL_REWARDS_KEY = "fridgemall-referral-rewards";
+
+
+// async function getUserCode(){
+//   const session = await getSession();
+//   if (!session?.user?.email) {
+//     throw new Error("Unauthorized");
+//   }
+//   await dbConnect();
+//   const user = await User.findOne({ email: session.user.email });
+//   if (!user) {
+//     throw new Error("User not found");
+//   }
+//   return user.code || "";
+// }
+
+
+
 
 function generateCode(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";

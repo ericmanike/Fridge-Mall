@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { toast,ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { User, Phone, Mail, Lock, Eye, EyeOff, Loader2, ArrowRight } from "lucide-react";
+import { User, Phone, Mail, Lock, Eye, EyeOff, Loader2, ArrowRight, Gift } from "lucide-react";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -13,66 +13,71 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
+  const [referredBy, setReferredBy] = useState("");
 
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-
-
-  
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-       
-        setIsLoading(true);
-
-        try {
-            const cleanEmail = email.trim().toLowerCase();
-            const referredBy = localStorage.getItem("fridgemall-referredby") || "";
-            const res = await fetch("/api/auth/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  name,
-                  email: cleanEmail,
-                  password,
-                  phone,
-                  referredBy
-                }),
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                throw new Error(data.message || "Something went wrong");
-            }
-   
-            if(!cleanEmail || !password){
-                toast.error('something went wrong missing email and password')
-                return
-            }
-
-            const Loginres = await signIn("credentials", {
-                email: cleanEmail,
-                password,
-                redirect: false,
-                callbackUrl: sessionStorage.getItem("callbackUrl") || "/dashboard",  
-            });
-
-            if (Loginres?.error) {
-                toast.error(Loginres.error === "CredentialsSignin" ? "Invalid email or password" : Loginres.error);
-            } else if (Loginres?.ok) {
-                toast.success("Account created successfully");
-                const targetUrl = Loginres.url || sessionStorage.getItem("callbackUrl") || "/dashboard";
-                router.push(targetUrl);
-                router.refresh();
-            }
-        } catch (err: any) {
-            toast.error(err.message);
-        } finally {
-            setIsLoading(false);
-        }
+  useEffect(() => {
+    const savedCode = localStorage.getItem("fridgemall-referredby") || "";
+    if (savedCode) {
+      setReferredBy(savedCode);
     }
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+   
+    setIsLoading(true);
+
+    try {
+        const cleanEmail = email.trim().toLowerCase();
+        const codeToUse = referredBy.trim() || localStorage.getItem("fridgemall-referredby") || "";
+        const res = await fetch("/api/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name,
+              email: cleanEmail,
+              password,
+              phone,
+              referredBy: codeToUse
+            }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.message || "Something went wrong");
+        }
+
+        if(!cleanEmail || !password){
+            toast.error('something went wrong missing email and password')
+            return
+        }
+
+        const Loginres = await signIn("credentials", {
+            email: cleanEmail,
+            password,
+            redirect: false,
+            callbackUrl: sessionStorage.getItem("callbackUrl") || "/dashboard",  
+        });
+
+        if (Loginres?.error) {
+            toast.error(Loginres.error === "CredentialsSignin" ? "Invalid email or password" : Loginres.error);
+        } else if (Loginres?.ok) {
+            toast.success("Account created successfully");
+            const targetUrl = Loginres.url || sessionStorage.getItem("callbackUrl") || "/dashboard";
+            router.push(targetUrl);
+            router.refresh();
+        }
+    } catch (err: any) {
+        toast.error(err.message);
+    } finally {
+        setIsLoading(false);
+    }
+  }
 
   return (
     <div className="w-full rounded-[24px] border border-slate-100 bg-white p-7 shadow-[0_10px_35px_rgba(0,0,0,0.04)] sm:p-9 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -166,8 +171,19 @@ export default function SignUpPage() {
           </button>
         </div>
         
-
-
+        {/* Referral Code input */}
+        <div className="relative flex items-center">
+          <div className="pointer-events-none absolute left-4 text-slate-400">
+            <Gift className="h-5 w-5" strokeWidth={1.8} />
+          </div>
+          <input
+            type="text"
+            value={referredBy}
+            onChange={(e) => setReferredBy(e.target.value.toUpperCase())}
+            placeholder="Referral Code (Optional)"
+            className="block w-full rounded-xl border border-slate-200 bg-[#f4f5f7] py-3.5 pl-12 pr-4 text-sm text-slate-800 placeholder-slate-400 outline-none transition-all duration-200 focus:border-slate-400 focus:bg-white focus:ring-1 focus:ring-slate-400 uppercase font-mono tracking-wider"
+          />
+        </div>
 
         <button
           type="submit"

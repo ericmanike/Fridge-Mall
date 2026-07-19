@@ -52,22 +52,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    // Verify referral earnings via orders in DB
-    const referralOrders = await Order.countDocuments({ referralCodeUsed: referralCode });
-    const totalReferralEarnings = referralOrders * 50;
+    const walletBalance = currentUser.walletBalance || 0;
 
-    // Calculate previously requested (pending / approved) withdrawals
-    const previousRequests = await WithdrawalRequest.find({
-      userId: currentUser._id,
-      status: { $in: ["pending", "approved"] },
-    });
-    const totalRequested = previousRequests.reduce((sum, r) => sum + r.amount, 0);
-
-    const withdrawable = totalReferralEarnings - totalRequested;
-
-    if (amount > withdrawable) {
+    if (amount > walletBalance) {
       return NextResponse.json(
-        { message: `Insufficient earnings. Max withdrawable balance: GHS ${withdrawable.toFixed(2)}` },
+        { message: `Insufficient earnings. Max withdrawable balance: GHS ${walletBalance.toFixed(2)}` },
         { status: 400 }
       );
     }
