@@ -161,8 +161,8 @@ export default async function Home() {
       </div>
 
       {/* Right Column (Asymmetrical Collage Grid) */}
-      <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-4 items-center">
-        {/* Column 1: LG Fridge */}
+      {/*  <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-4 items-center">
+    
         <div className="relative aspect-[3/4.5] w-full rounded-2xl overflow-hidden shadow-xl transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl mt-8 bg-white">
           <Image
             src="/brands/lg.png"
@@ -173,7 +173,7 @@ export default async function Home() {
           />
         </div>
 
-        {/* Column 2: Samsung Fridge (Top) + Wolverine (Bottom) */}
+
         <div className="space-y-4">
           <div className="relative aspect-[4/3.5] w-full rounded-2xl overflow-hidden shadow-xl transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl bg-white">
             <Image
@@ -195,7 +195,7 @@ export default async function Home() {
           </div>
         </div>
 
-        {/* Column 3: Funko Girl (Tall) */}
+
         <div className="relative aspect-[3/4.8] w-full rounded-2xl overflow-hidden shadow-xl transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl mt-4">
           <Image
             src="/brands/funko-girl.png"
@@ -206,7 +206,7 @@ export default async function Home() {
           />
         </div>
 
-        {/* Column 4: Gengar (Top) + Hisense Fridge (Bottom) */}
+          
         <div className="space-y-4">
           <div className="relative aspect-[4/3.8] w-full rounded-2xl overflow-hidden shadow-xl transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl">
             <Image
@@ -227,7 +227,7 @@ export default async function Home() {
             />
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   </section>
 
