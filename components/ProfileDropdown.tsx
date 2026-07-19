@@ -16,11 +16,11 @@ export default function ProfileDropdown() {
   if (!session) {
     return (
       <Link
-        href="/auth/login"
+        href="/auth/signIn"
         className="flex items-center gap-1.5 rounded-full bg-[#0066FF] hover:bg-[#0066ffe7] px-4 py-2 text-sm font-bold text-white transition shadow-sm"
       >
         <User className="h-4 w-4" />
-        <span>Sign In</span>
+        <span>LogIn</span>
       </Link>
     );
   }

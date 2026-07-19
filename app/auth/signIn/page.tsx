@@ -25,22 +25,24 @@ export default function SignInPage() {
         setIsLoading(true);
 
         try {
+            const cleanEmail = email.trim().toLowerCase();
             const res = await signIn("credentials", {
-                email,
+                email: cleanEmail,
                 password,
-                redirect: true,
+                redirect: false,
                 callbackUrl: sessionStorage.getItem("callbackUrl") || "/dashboard",  
             });
 
             if (res?.error) {
-                toast.error(res.error);
-            } else {
-              toast.success("Login Successful");
-                router.push("/dashboard");
+                toast.error(res.error === "CredentialsSignin" ? "Invalid email or password" : res.error);
+            } else if (res?.ok) {
+                toast.success("Login Successful");
+                const targetUrl = res.url || sessionStorage.getItem("callbackUrl") || "/dashboard";
+                router.push(targetUrl);
                 router.refresh();
             }
         } catch (err: any) {
-            toast.error("Too many attempts , try again later");
+            toast.error("Too many attempts, try again later");
         } finally {
             setIsLoading(false);
         }

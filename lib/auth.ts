@@ -23,7 +23,8 @@ export const authOptions: NextAuthOptions = {
                 }
 
                 await dbConnect();
-                const user = await User.findOne({ email: credentials.email }).select('+password');
+                const cleanEmail = credentials.email.trim().toLowerCase();
+                const user = await User.findOne({ email: cleanEmail }).select('+password');
 
                 if (!user) {
                     throw new Error('No user found with this email');
@@ -113,7 +114,7 @@ export const authOptions: NextAuthOptions = {
         },
     },
     pages: {
-        signIn: '/auth/login',
+        signIn: '/auth/signIn',
     },
     session: {
         strategy: 'jwt',

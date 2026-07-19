@@ -157,7 +157,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, user }: SidebarPr
         {/* Footer Log out */}
         <div className="p-4 border-t border-slate-100 shrink-0">
           <button
-            onClick={() => signOut({ callbackUrl: "/auth/login" })}
+            onClick={() => signOut({ callbackUrl: "/auth/signIn" })}
             className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-slate-200 hover:bg-red-50 hover:text-red-600 hover:border-red-100 text-slate-600 text-xs font-bold uppercase tracking-wider transition-all"
           >
             <LogOut size={14} />

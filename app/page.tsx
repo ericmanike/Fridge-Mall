@@ -14,7 +14,7 @@ const heroSlides = [
     title: "Don't miss out on insider perks",
     description: "What are you waiting for? Make the most of Fridge Mall account benefits.",
     ctaText: "Sign in",
-    ctaLink: "/auth/login",
+    ctaLink: "/auth/signIn",
     backgroundImage: "/hero-lifestyle.png",
     imageAlt: "Insider perks lifestyle",
   },

@@ -86,7 +86,7 @@ export default function ReferralPage() {
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
-              href="/auth/login"
+              href="/auth/signIn"
               className="w-full sm:w-auto rounded-full bg-white text-[#4F46E5] hover:bg-purple-50 px-8 py-3.5 text-sm font-bold transition-all shadow-md hover:scale-[1.02] cursor-pointer"
             >
               Sign In to start

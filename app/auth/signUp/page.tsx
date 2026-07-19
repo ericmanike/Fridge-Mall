@@ -27,13 +27,14 @@ export default function SignUpPage() {
         setIsLoading(true);
 
         try {
+            const cleanEmail = email.trim().toLowerCase();
             const referredBy = localStorage.getItem("fridgemall-referredby") || "";
             const res = await fetch("/api/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                   name,
-                  email,
+                  email: cleanEmail,
                   password,
                   phone,
                   referredBy
@@ -46,28 +47,26 @@ export default function SignUpPage() {
                 throw new Error(data.message || "Something went wrong");
             }
    
-    if(!email || !password){
-        toast.error('something went wrong missing email and paddword')
-        return
-    }
-
-   const Loginres =  await signIn("credentials",{
-          email,
-          password,
-          redirect:true,
-          callbackUrl: sessionStorage.getItem("callbackUrl") || "/dashboard",  
-             }
-             )
-            if (Loginres?.error) {
-              toast.error(Loginres.error);
-            } else {
-              toast.success("Account created successfully");
-                router.push("/dashboard");
-                router.refresh();
+            if(!cleanEmail || !password){
+                toast.error('something went wrong missing email and password')
+                return
             }
 
-         console.log(Loginres)
+            const Loginres = await signIn("credentials", {
+                email: cleanEmail,
+                password,
+                redirect: false,
+                callbackUrl: sessionStorage.getItem("callbackUrl") || "/dashboard",  
+            });
 
+            if (Loginres?.error) {
+                toast.error(Loginres.error === "CredentialsSignin" ? "Invalid email or password" : Loginres.error);
+            } else if (Loginres?.ok) {
+                toast.success("Account created successfully");
+                const targetUrl = Loginres.url || sessionStorage.getItem("callbackUrl") || "/dashboard";
+                router.push(targetUrl);
+                router.refresh();
+            }
         } catch (err: any) {
             toast.error(err.message);
         } finally {

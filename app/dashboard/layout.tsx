@@ -14,14 +14,14 @@ export default async function DashboardLayout({
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user) {
-    redirect("/auth/login");
+    redirect("/auth/signIn");
   }
 
   await dbConnect();
   const dbUser = await User.findOne({ email: session.user.email });
 
   if (!dbUser) {
-    redirect("/auth/login");
+    redirect("/auth/signIn");
   }
 
   // Serialize user details for components

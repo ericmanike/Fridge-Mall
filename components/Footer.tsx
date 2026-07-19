@@ -8,6 +8,8 @@ export default function Footer() {
   
   if (
     pathname === "/auth/login" || 
+    pathname === "/auth/signIn" ||
+    pathname === "/auth/signUp" ||
     pathname === "/auth/register" || 
     pathname === "/dashboard" || 
     pathname === "/dashboard/orders" ||
