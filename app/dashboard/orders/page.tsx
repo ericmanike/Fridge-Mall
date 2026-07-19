@@ -57,7 +57,7 @@ export default function OrdersPage() {
   }, [localOrders]);
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs animate-in fade-in duration-300">
+    <div className="rounded-2xl h-screen border border-slate-200 bg-white p-6 shadow-xs animate-in fade-in duration-300">
       <h3 className="text-lg font-bold text-slate-900 mb-4">My Orders</h3>
       {loading ? (
         <div className="space-y-4 py-6">

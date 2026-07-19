@@ -53,7 +53,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 animate-in fade-in duration-300">
+    <div className="max-w-3xl mx-auto space-y-6 animate-in fade-in duration-300 h-screen">
       <ToastContainer />
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
         <div className="flex items-center gap-4 pb-6 border-b border-slate-100">

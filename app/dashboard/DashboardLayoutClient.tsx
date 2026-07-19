@@ -29,7 +29,7 @@ export default function DashboardLayoutClient({
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden xl:pl-[270px]">
+      <div className="flex-1 flex h-screen overflow-y-auto flex-col min-w-0 overflow-hidden xl:pl-[270px]">
         {/* Mobile Header / Top Bar */}
         <header className="flex items-center justify-between px-4 py-3.5 bg-white border-b border-slate-200 xl:hidden shrink-0">
           <div className="flex items-center gap-3">

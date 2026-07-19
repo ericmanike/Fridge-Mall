@@ -104,7 +104,7 @@ export default function DashboardIndexPage() {
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="h-screen space-y-8 animate-in fade-in duration-300">
       <ToastContainer />
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Welcome Card & Summary */}
