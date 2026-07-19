@@ -122,18 +122,33 @@ export async function PUT(req: Request) {
       return NextResponse.json({ message: "Forbidden: Admins only" }, { status: 403 });
     }
 
-    const { orderId, status } = await req.json();
-    if (!orderId || !status) {
-      return NextResponse.json({ message: "Missing orderId or status" }, { status: 400 });
+    const { orderId, status, deliveryFee } = await req.json();
+    if (!orderId) {
+      return NextResponse.json({ message: "Missing orderId" }, { status: 400 });
     }
 
-    if (!["pending", "confirmed", "delivered"].includes(status)) {
-      return NextResponse.json({ message: "Invalid status value" }, { status: 400 });
+    const existingOrder = await Order.findOne({ orderId });
+    if (!existingOrder) {
+      return NextResponse.json({ message: "Order not found" }, { status: 404 });
+    }
+
+    const updateFields: any = {};
+
+    if (status) {
+      if (!["pending", "confirmed", "delivered"].includes(status)) {
+        return NextResponse.json({ message: "Invalid status value" }, { status: 400 });
+      }
+      updateFields.status = status;
+    }
+
+    if (typeof deliveryFee === "number" && deliveryFee >= 0) {
+      updateFields.deliveryFee = deliveryFee;
+      updateFields.total = existingOrder.subtotal + deliveryFee;
     }
 
     const updatedOrder = await Order.findOneAndUpdate(
       { orderId },
-      { status },
+      { $set: updateFields },
       { new: true }
     );
 
@@ -142,7 +157,7 @@ export async function PUT(req: Request) {
     }
 
     // Process referral reward if order is delivered and not yet rewarded
-    if (status === "delivered" && updatedOrder.referralCodeUsed && !updatedOrder.referralRewarded) {
+    if (updatedOrder.status === "delivered" && updatedOrder.referralCodeUsed && !updatedOrder.referralRewarded) {
       const referrer = await User.findOne({ code: updatedOrder.referralCodeUsed });
       if (referrer) {
         referrer.walletBalance = (referrer.walletBalance || 0) + 50;
@@ -153,7 +168,7 @@ export async function PUT(req: Request) {
       }
     }
 
-    return NextResponse.json({ message: "Order status updated successfully", order: updatedOrder });
+    return NextResponse.json({ message: "Order updated successfully", order: updatedOrder });
   } catch (error: any) {
     console.error("PUT orders API error:", error);
     return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });

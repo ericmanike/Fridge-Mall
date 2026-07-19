@@ -59,6 +59,14 @@ export default function AdminOrdersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "confirmed" | "delivered">("all");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [editingDeliveryFee, setEditingDeliveryFee] = useState<string>("0");
+  const [savingFee, setSavingFee] = useState(false);
+
+  useEffect(() => {
+    if (selectedOrder) {
+      setEditingDeliveryFee((selectedOrder.deliveryFee ?? 0).toString());
+    }
+  }, [selectedOrder]);
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -101,6 +109,43 @@ export default function AdminOrdersPage() {
       }
     } catch (err) {
       toast.error("An error occurred");
+    }
+  };
+
+  const handleSaveDeliveryFee = async () => {
+    if (!selectedOrder) return;
+    const fee = parseFloat(editingDeliveryFee);
+    if (isNaN(fee) || fee < 0) {
+      toast.error("Please enter a valid non-negative delivery fee.");
+      return;
+    }
+
+    setSavingFee(true);
+    try {
+      const res = await fetch("/api/orders", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderId: selectedOrder.orderId,
+          deliveryFee: fee,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        toast.success("Delivery fee updated successfully!");
+        fetchOrders();
+        if (data.order) {
+          setSelectedOrder(data.order);
+        }
+      } else {
+        const errorData = await res.json();
+        toast.error(errorData.message || "Failed to update delivery fee");
+      }
+    } catch (err) {
+      toast.error("An error occurred while updating delivery fee");
+    } finally {
+      setSavingFee(false);
     }
   };
 
@@ -209,7 +254,12 @@ export default function AdminOrdersPage() {
                         minute: "2-digit",
                       })}
                     </td>
-                    <td className="py-4 px-6 font-black text-slate-950">{formatCurrency(o.total)}</td>
+                    <td className="py-4 px-6">
+                      <p className="font-black text-slate-950">{formatCurrency(o.total)}</p>
+                      <p className="text-[11px] text-slate-500 font-medium mt-0.5">
+                        {o.deliveryFee > 0 ? `Delivery: ${formatCurrency(o.deliveryFee)}` : "Free Delivery"}
+                      </p>
+                    </td>
                     <td className="py-4 px-6">
                       <span
                         className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider ${
@@ -323,18 +373,44 @@ export default function AdminOrdersPage() {
               </div>
 
               {/* Order total */}
-              <div className="space-y-2 bg-slate-50 p-4 rounded-xl text-sm">
+              <div className="space-y-3 bg-slate-50 p-4 rounded-xl text-sm border border-slate-100">
                 <div className="flex justify-between text-slate-600">
                   <span>Subtotal</span>
                   <span>{formatCurrency(selectedOrder.subtotal)}</span>
                 </div>
-                <div className="flex justify-between text-emerald-600 font-semibold">
-                  <span>Delivery</span>
-                  <span>FREE</span>
+                
+                <div className="flex justify-between items-center text-slate-700">
+                  <span className="font-bold flex items-center gap-1.5 text-xs text-slate-600">
+                    <Truck className="h-3.5 w-3.5 text-blue-600" />
+                    Delivery Fee (GHS)
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder="0.00"
+                      value={editingDeliveryFee}
+                      onChange={(e) => setEditingDeliveryFee(e.target.value)}
+                      className="w-24 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs text-slate-800 font-bold outline-none focus:border-blue-500 transition"
+                    />
+                    <button
+                      onClick={handleSaveDeliveryFee}
+                      disabled={savingFee}
+                      className="rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-50 px-3 py-1 text-xs font-bold text-white transition cursor-pointer shadow-xs"
+                    >
+                      {savingFee ? "Saving..." : "Update Fee"}
+                    </button>
+                  </div>
                 </div>
+
                 <div className="flex justify-between border-t border-slate-200 pt-2 text-base font-black text-slate-900">
                   <span>Total Amount</span>
-                  <span>{formatCurrency(selectedOrder.total)}</span>
+                  <span>
+                    {formatCurrency(
+                      selectedOrder.subtotal + (parseFloat(editingDeliveryFee) || 0)
+                    )}
+                  </span>
                 </div>
               </div>
 
