@@ -5,15 +5,8 @@ import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/mongoose";
 import User from "@/models/User";
 import Link from "next/link";
-import {
-  LayoutDashboard,
-  ShoppingBag,
-  TrendingUp,
-  Users,
-  ArrowLeft,
-  ShieldAlert,
-  Banknote,
-} from "lucide-react";
+import { ShieldAlert } from "lucide-react";
+import AdminLayoutClient from "./AdminLayoutClient";
 
 export default async function AdminLayout({
   children,
@@ -57,76 +50,5 @@ export default async function AdminLayout({
     );
   }
 
-  return (
-    <div className="flex min-h-screen flex-col md:flex-row bg-slate-50 font-sans antialiased text-slate-800">
-      {/* Sidebar Panel */}
-      <aside className="w-full shrink-0 border-b border-slate-200 bg-[#1874ff] text-white md:fixed md:inset-y-0 md:left-0 md:w-64 md:h-screen md:border-b-0 md:border-r z-30">
-        <div className="flex flex-col h-full justify-between">
-          <div>
-       
-            <div className="flex h-16 items-center px-6 border-b border-white/10">
-              <span className="text-lg font-black text-white tracking-wider uppercase flex items-center gap-2">
-             Admin Panel
-              </span>
-            </div>
-
-            {/* Nav links */}
-            <nav className="space-y-1 p-4">
-              <Link
-                href="/admin"
-                className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-white/90 hover:bg-white/10 hover:text-white transition duration-200"
-              >
-                <LayoutDashboard className="h-4.5 w-4.5" />
-                Overview
-              </Link>
-              <Link
-                href="/admin/products"
-                className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-white/90 hover:bg-white/10 hover:text-white transition duration-200"
-              >
-                <ShoppingBag className="h-4.5 w-4.5" />
-                Manage Products
-              </Link>
-              <Link
-                href="/admin/orders"
-                className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-white/90 hover:bg-white/10 hover:text-white transition duration-200"
-              >
-                <TrendingUp className="h-4.5 w-4.5" />
-                Manage Orders
-              </Link>
-              <Link
-                href="/admin/users"
-                className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-white/90 hover:bg-white/10 hover:text-white transition duration-200"
-              >
-                <Users className="h-4.5 w-4.5" />
-                Manage Users
-              </Link>
-              <Link
-                href="/admin/withdrawals"
-                className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-white/90 hover:bg-white/10 hover:text-white transition duration-200"
-              >
-                <Banknote className="h-4.5 w-4.5" />
-                Withdrawal Requests
-              </Link>
-            </nav>
-          </div>
-
-          {/* Footer controls inside sidebar */}
-          <div className="p-4 border-t border-white/10">
-            <Link
-              href="/dashboard"
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/15 hover:bg-white/25 border border-white/20 py-3 text-sm font-semibold text-white transition duration-200"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              User Dashboard
-            </Link>
-          </div>
-        </div>
-      </aside>
-
-      {/* Main page content area */}
-      <main className="flex-1 overflow-y-auto px-4 py-8 sm:px-6 md:px-8 md:pl-[288px]">
-        {children}
-      </main>
-    </div>
-  );
+  return <AdminLayoutClient>{children}</AdminLayoutClient>;
 }
