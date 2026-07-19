@@ -138,11 +138,11 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Recent Orders and catalog quick actions */}
-      <div className="grid gap-8 lg:grid-cols-3">
+      <div className="grid gap-6 lg:grid-cols-3">
         {/* Recent Orders List */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 lg:col-span-2">
+        <div className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5 lg:col-span-2 min-w-0">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base font-bold text-slate-800">Recent Customer Activity</h3>
+            <h3 className="text-sm font-bold text-slate-800">Recent Customer Activity</h3>
             <Link
               href="/admin/orders"
               className="text-xs font-bold text-blue-600 hover:text-blue-700 transition"
@@ -157,24 +157,24 @@ export default async function AdminDashboardPage() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-left text-sm">
+              <table className="w-full border-collapse text-left text-xs sm:text-sm">
                 <thead>
                   <tr className="border-b border-slate-100 text-slate-400 font-semibold">
-                    <th className="py-2 pr-4">Order ID</th>
-                    <th className="py-2 px-4">Customer</th>
-                    <th className="py-2 px-4">Amount</th>
-                    <th className="py-2 pl-4 text-right">Status</th>
+                    <th className="py-2 pr-3 whitespace-nowrap">Order ID</th>
+                    <th className="py-2 px-3 whitespace-nowrap">Customer</th>
+                    <th className="py-2 px-3 whitespace-nowrap">Amount</th>
+                    <th className="py-2 pl-3 text-right whitespace-nowrap">Status</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-50">
                   {recentOrders.map((o) => (
                     <tr key={o.orderId} className="hover:bg-slate-50/50 transition">
-                      <td className="py-3 pr-4 font-mono font-bold text-slate-800">{o.orderId}</td>
-                      <td className="py-3 px-4 text-slate-600 font-semibold">{o.details.fullName}</td>
-                      <td className="py-3 px-4 font-bold text-slate-950">{formatCurrency(o.total)}</td>
-                      <td className="py-3 pl-4 text-right">
+                      <td className="py-2.5 pr-3 font-mono font-bold text-slate-800 whitespace-nowrap">{o.orderId}</td>
+                      <td className="py-2.5 px-3 text-slate-600 font-semibold whitespace-nowrap">{o.details.fullName}</td>
+                      <td className="py-2.5 px-3 font-bold text-slate-950 whitespace-nowrap">{formatCurrency(o.total)}</td>
+                      <td className="py-2.5 pl-3 text-right whitespace-nowrap">
                         <span
-                          className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold uppercase tracking-wider ${
+                          className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
                             o.status === "delivered"
                               ? "bg-emerald-100 text-emerald-800"
                               : o.status === "confirmed"
@@ -194,22 +194,22 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Quick Management Shortcuts */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-6">
-          <h3 className="text-base font-bold text-slate-800 mb-4">Operations Shortcuts</h3>
-          <div className="space-y-3">
+        <div className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5 min-w-0">
+          <h3 className="text-sm font-bold text-slate-800 mb-3">Operations Shortcuts</h3>
+          <div className="space-y-2.5">
             <Link
               href="/admin/products"
-              className="block rounded-xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50/20 p-4 transition text-left"
+              className="block rounded-lg border border-slate-200 hover:border-blue-500 hover:bg-blue-50/20 p-3 transition text-left"
             >
-              <p className="font-bold text-slate-800">Add New Fridge</p>
-              <p className="text-xs text-slate-500 mt-0.5">Insert new brand or model specification into catalog</p>
+              <p className="font-bold text-slate-800 text-xs sm:text-sm">Add New Fridge</p>
+              <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">Insert new brand or model specification into catalog</p>
             </Link>
             <Link
               href="/admin/orders"
-              className="block rounded-xl border border-slate-200 hover:border-pink-500 hover:bg-pink-50/20 p-4 transition text-left"
+              className="block rounded-lg border border-slate-200 hover:border-pink-500 hover:bg-pink-50/20 p-3 transition text-left"
             >
-              <p className="font-bold text-slate-800">Manage Orders</p>
-              <p className="text-xs text-slate-500 mt-0.5">Track customer checkouts, verify payments, and update shipping status</p>
+              <p className="font-bold text-slate-800 text-xs sm:text-sm">Manage Orders</p>
+              <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">Track customer checkouts, verify payments, and update shipping status</p>
             </Link>
           </div>
         </div>

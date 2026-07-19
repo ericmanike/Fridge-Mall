@@ -156,7 +156,7 @@ export default function AdminLayoutClient({ children }: AdminLayoutClientProps) 
       </aside>
 
       {/* Main page content area */}
-      <main className="flex-1 overflow-y-auto px-4 py-8 sm:px-6 md:px-8 md:pl-72">
+      <main className="flex-1 min-w-0 overflow-y-auto px-4 py-8 sm:px-6 md:px-8 md:pl-72">
         {children}
       </main>
     </div>
