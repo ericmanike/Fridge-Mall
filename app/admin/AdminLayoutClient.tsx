@@ -88,7 +88,7 @@ export default function AdminLayoutClient({ children }: AdminLayoutClientProps) 
 
       {/* Sidebar Panel (Desktop & Mobile Slide-out from Left) */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#1874ff] text-white flex flex-col h-screen transition-transform duration-300 ease-in-out md:translate-x-0 md:z-30 border-r border-white/10 shadow-xl md:shadow-none ${
+        className={`fixed inset-y-0 left-0 z-40 w-64 bg-[#1874ff] text-white flex flex-col h-screen transition-transform duration-300 ease-in-out md:translate-x-0 border-r border-white/10 shadow-xl md:shadow-none ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

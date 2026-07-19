@@ -3,12 +3,18 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { ShoppingCart, Phone, Mail, Truck, MapPin } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import ProfileDropdown from "./ProfileDropdown";
 
 export default function Header() {
+  const pathname = usePathname();
   const { itemCount } = useCart();
+
+  if (pathname?.startsWith("/admin") || pathname?.startsWith("/dashboard")) {
+    return null;
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white">

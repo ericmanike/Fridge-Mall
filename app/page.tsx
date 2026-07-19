@@ -7,6 +7,7 @@ import dbConnect from "@/lib/mongoose";
 import ProductModel from "@/models/Products";
 import { products as staticProducts } from "@/lib/products";
 import HeroSlider from "@/components/HeroSlider";
+import { Metadata } from "next";
 
 const heroSlides = [
   {
@@ -47,6 +48,16 @@ const perks: { title: string; description: string; Icon: LucideIcon }[] = [
     Icon: Gift,
   },
 ];
+
+const metadata: Metadata = {
+  title: {
+    default: "Fridge Mall — Pay on Delivery",
+    template: "%s | Fridge Mall",
+  },
+  description:
+    "Shop quality refrigerators in Ghana ,pay on delivery. Refer friends and earn GHS 50 instantly.",
+};
+
 
 export default async function Home() {
   let displayProducts = [];

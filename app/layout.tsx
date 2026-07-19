@@ -18,11 +18,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Fridge Mall — Free Delivery, Pay on Delivery",
+    default: "Fridge Mall - Pay on Delivery",
     template: "%s | Fridge Mall",
   },
   description:
-    "Shop quality refrigerators in Ghana with free delivery and pay on delivery. Refer friends and earn GHS 50 instantly.",
+    "Shop quality refrigerators in Ghana , pay on delivery. Refer friends and earn GHS 50 instantly.",
 };
 
 export default function RootLayout({
