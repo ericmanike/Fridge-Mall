@@ -99,7 +99,7 @@ export default function CartPage() {
           ))}
         </div>
 
-        <div className="h-fit rounded-2xl border border-slate-200 bg-white p-6">
+        <div className="h-screen rounded-2xl border border-slate-200 bg-white p-6">
           <h2 className="font-bold text-slate-900">Order summary</h2>
           <div className="mt-4 space-y-2 text-sm">
             <div className="flex justify-between text-slate-600">

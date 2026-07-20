@@ -7,7 +7,8 @@ import dbConnect from "@/lib/mongoose";
 import ProductModel from "@/models/Products";
 import { products as staticProducts } from "@/lib/products";
 import HeroSlider from "@/components/HeroSlider";
-import { Metadata } from "next";
+import { Metadata } from "next"; 
+
 
 const heroSlides = [
   {
@@ -113,7 +114,7 @@ export default async function Home() {
               </span>
             </Link>
           </div>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 grid gap-6 grid-cols-2 lg:grid-cols-4 h-fit">
             {featured.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -159,75 +160,14 @@ export default async function Home() {
           </Link>
         </div>
       </div>
-
-      {/* Right Column (Asymmetrical Collage Grid) */}
-      {/*  <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-4 items-center">
-    
-        <div className="relative aspect-[3/4.5] w-full rounded-2xl overflow-hidden shadow-xl transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl mt-8 bg-white">
-          <Image
-            src="/brands/lg.png"
-            alt="LG Fridge"
-            fill
-            sizes="(max-width: 768px) 50vw, 15vw"
-            className="object-cover"
-          />
-        </div>
+            
+            <div>
 
 
-        <div className="space-y-4">
-          <div className="relative aspect-[4/3.5] w-full rounded-2xl overflow-hidden shadow-xl transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl bg-white">
-            <Image
-              src="/brands/samsung.png"
-              alt="Samsung Fridge"
-              fill
-              sizes="(max-width: 768px) 50vw, 15vw"
-              className="object-cover"
-            />
-          </div>
-          <div className="relative aspect-[4/5.5] w-full rounded-2xl overflow-hidden shadow-xl transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl">
-            <Image
-              src="/brands/funko-wolverine.png"
-              alt="Funko Wolverine"
-              fill
-              sizes="(max-width: 768px) 50vw, 15vw"
-              className="object-cover"
-            />
-          </div>
-        </div>
 
-
-        <div className="relative aspect-[3/4.8] w-full rounded-2xl overflow-hidden shadow-xl transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl mt-4">
-          <Image
-            src="/brands/funko-girl.png"
-            alt="Funko Girl"
-            fill
-            sizes="(max-width: 768px) 50vw, 15vw"
-            className="object-cover"
-          />
-        </div>
-
-          
-        <div className="space-y-4">
-          <div className="relative aspect-[4/3.8] w-full rounded-2xl overflow-hidden shadow-xl transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl">
-            <Image
-              src="/brands/pokemon-gengar.png"
-              alt="Pokemon Gengar"
-              fill
-              sizes="(max-width: 768px) 50vw, 15vw"
-              className="object-cover"
-            />
-          </div>
-          <div className="relative aspect-[4/6] w-full rounded-2xl overflow-hidden shadow-xl transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl bg-white">
-            <Image
-              src="/brands/hisense.png"
-              alt="Hisense Fridge"
-              fill
-              sizes="(max-width: 768px) 50vw, 15vw"
-              className="object-cover"
-            />
-          </div>
-        </div>
-      </div> */}
+            </div>
+  
+   
     </div>
   </section>
 
