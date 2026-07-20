@@ -155,14 +155,16 @@ export default async function Home() {
           </div>
             
           {/* Right Column: Showcase Cards */}
-          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="lg:col-span-7 max-w-md w-full lg:justify-self-end ml-auto grid grid-cols-1 gap-4">
             <div className="rounded-2xl bg-[#E2E8F0] p-5 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
-              <div className="h-9 w-9 rounded-xl bg-amber-500/20 text-amber-800 flex items-center justify-center mb-3">
-                <Gift className="h-5 w-5" />
+              <div className="flex items-center justify-between mb-3">
+                <span className="inline-block rounded-full bg-amber-600 px-2.5 py-1 text-[10px] font-bold text-white uppercase tracking-wider">
+                  Instant Cash
+                </span>
+                <div className="h-9 w-9 rounded-xl bg-amber-600 text-white flex items-center justify-center">
+                  <Gift className="h-5 w-5" />
+                </div>
               </div>
-              <span className="inline-block rounded-full bg-amber-500/20 px-2.5 py-0.5 text-[10px] font-bold text-amber-900 uppercase tracking-wider mb-1.5">
-                Instant Cash
-              </span>
               <h3 className="text-lg font-bold text-[#252260]">GHS 50 Referral Reward</h3>
               <p className="mt-1.5 text-xs text-[#252260]/80 leading-relaxed">
                 Earn GHS 50 straight to your wallet for every friend who orders a fridge.
@@ -170,41 +172,17 @@ export default async function Home() {
             </div>
 
             <div className="rounded-2xl bg-[#E2E8F0] p-5 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
-              <div className="h-9 w-9 rounded-xl bg-emerald-500/20 text-emerald-800 flex items-center justify-center mb-3">
-                <Banknote className="h-5 w-5" />
+              <div className="flex items-center justify-between mb-3">
+                <span className="inline-block rounded-full bg-emerald-600 px-2.5 py-1 text-[10px] font-bold text-white uppercase tracking-wider">
+                  Zero Upfront Risk
+                </span>
+                <div className="h-9 w-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center">
+                  <Banknote className="h-5 w-5" />
+                </div>
               </div>
-              <span className="inline-block rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-[10px] font-bold text-emerald-900 uppercase tracking-wider mb-1.5">
-                Zero Upfront Risk
-              </span>
               <h3 className="text-lg font-bold text-[#252260]">Pay on Delivery</h3>
               <p className="mt-1.5 text-xs text-[#252260]/80 leading-relaxed">
                 Inspect your appliance at your doorstep before paying with cash or MoMo.
-              </p>
-            </div>
-
-            <div className="rounded-2xl bg-[#E2E8F0] p-5 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
-              <div className="h-9 w-9 rounded-xl bg-blue-500/20 text-blue-800 flex items-center justify-center mb-3">
-                <Truck className="h-5 w-5" />
-              </div>
-              <span className="inline-block rounded-full bg-blue-500/20 px-2.5 py-0.5 text-[10px] font-bold text-blue-900 uppercase tracking-wider mb-1.5">
-                Fast Shipping
-              </span>
-              <h3 className="text-lg font-bold text-[#252260]">Doorstep Delivery</h3>
-              <p className="mt-1.5 text-xs text-[#252260]/80 leading-relaxed">
-                Quick, safe doorstep delivery across Accra, Kumasi, and all regions in Ghana.
-              </p>
-            </div>
-
-            <div className="rounded-2xl bg-[#E2E8F0] p-5 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
-              <div className="h-9 w-9 rounded-xl bg-pink-500/20 text-pink-800 flex items-center justify-center mb-3">
-                <ShieldCheck className="h-5 w-5" />
-              </div>
-              <span className="inline-block rounded-full bg-pink-500/20 px-2.5 py-0.5 text-[10px] font-bold text-pink-900 uppercase tracking-wider mb-1.5">
-                Authentic
-              </span>
-              <h3 className="text-lg font-bold text-[#252260]">100% Original Brands</h3>
-              <p className="mt-1.5 text-xs text-[#252260]/80 leading-relaxed">
-                Factory-sealed LG, Samsung, Hisense, & Midea fridges with manufacturer warranty.
               </p>
             </div>
           </div>
