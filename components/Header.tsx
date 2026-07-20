@@ -21,7 +21,7 @@ export default function Header() {
       {/* Top Contact Bar */}
       <div className="bg-[#252260] text-slate-200 text-sm font-medium py-2.5 px-4 sm:px-6 md:px-10 border-b border-white/10">
         <div className="flex flex-wrap items-center justify-between gap-2.5 max-w-7xl mx-auto">
-          <div className="flex items-center gap-4 sm:gap-6">
+          <div className="flex items-center gap-8 sm:gap-6">
             <a
               href="tel:+233247574980"
               className="flex items-center gap-2 text-slate-200 hover:text-white transition-colors"
@@ -38,7 +38,7 @@ export default function Header() {
             </a>
           </div>
 
-          <div className="flex items-center gap-4 text-sm">
+          <div className="flex items-center gap-8 text-sm">
             <span className="hidden md:flex items-center gap-2 text-slate-200">
               <MapPin className="h-4 w-4 text-emerald-400 shrink-0" />
               <span>Accra,Kumasi, Ghana</span>

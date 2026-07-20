@@ -4,10 +4,8 @@ import styled from 'styled-components';
 const Loader = () => {
   return (
     <StyledWrapper>
-      <div className="loader min-h-screen w-full flex flex-col items-center justify-center bg-slate-50 gap-4">
-        <div className="loading-text">
-          Hold On Tight!
-        </div>
+      <div className="loader h-[95vh] w-full flex flex-col items-center justify-center bg-slate-50 gap-4">
+      
         <div className="loading-bar-background bg-[linear-gradient(0deg,#163269,#009dc5)]">
           <div className="loading-bar">
             <div className="white-bars-container">
@@ -24,6 +22,9 @@ const Loader = () => {
             </div>
           </div>
         </div>
+          <div className="loading-text">
+          Hold On Tight!
+        </div>
       </div>
     </StyledWrapper>
   );
@@ -39,10 +40,12 @@ const StyledWrapper = styled.div`
   }
 
   .loading-text {
-    color: white;
+    color: #252260;
     font-size: 14pt;
     font-weight: 600;
     margin-left: 10px;
+    margin-top: 10px;
+
   }
 
   .dot {
