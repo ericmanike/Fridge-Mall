@@ -211,8 +211,8 @@ export default function CheckoutPage() {
               <span>{formatCurrency(subtotal)}</span>
             </div>
             <div className="flex justify-between text-emerald-600">
-              <span>Delivery</span>
-              <span className="font-medium">FREE</span>
+              <span>Delivery Fee</span>
+              <span className="font-medium">Not Set Yet</span>
             </div>
             <div className="flex justify-between pt-2 text-base font-bold text-slate-900">
               <span>Pay on delivery</span>
