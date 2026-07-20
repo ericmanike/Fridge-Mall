@@ -9,13 +9,13 @@ interface AuthLayoutProps {
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <div className="flex min-h-screen w-full flex-col items-center justify-center bg-[#f4f6f8] px-4 py-10 font-sans antialiased text-slate-800">
+    <div className="flex min-h-fit w-full flex-col items-center justify-center bg-[#f4f6f8] px-4 py-10 font-sans antialiased text-slate-800">
       
       {/* 1. Header (Logo & Subtitle) */}
       <div className="mb-6 flex flex-col items-center text-center">
         <Link href="/">
           <Image
-            src="/logo.png"
+            src="/logo1.png"
             alt="Fridge Mall Logo"
             width={146}
             height={60}
