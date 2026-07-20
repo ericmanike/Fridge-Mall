@@ -145,6 +145,7 @@ export default async function Home() {
               Discover international brands with discount.
             </p>
             <div className="mt-8">
+              
               <Link
                 href="/products"
                 className="inline-block rounded-full bg-[#E0E7FF] text-[#4F46E5] px-8 py-3.5 text-base font-bold transition-all duration-200 hover:bg-white hover:scale-[1.03] active:scale-[0.98] shadow-md hover:shadow-lg"
