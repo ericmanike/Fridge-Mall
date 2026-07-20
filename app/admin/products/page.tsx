@@ -298,7 +298,7 @@ export default function AdminProductsPage() {
           <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl border border-slate-100 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-blue-600" />
+               
                 {editingProduct ? "Edit Fridge Specifications" : "Add Fridge Listing"}
               </h2>
               <button
