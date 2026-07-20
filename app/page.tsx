@@ -102,7 +102,7 @@ export default async function Home() {
             </div>
             <Link
               href="/products"
-              className="hidden text-sm font-semibold text-[#0066ffe2] hover:text-[#0066FF] sm:block"
+              className="text-sm font-semibold text-[#0066ffe2] hover:text-[#0066FF] sm:block"
             >
               <span className="inline-flex items-center gap-1">
                 View all <ArrowRight className="h-4 w-4" />

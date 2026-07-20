@@ -3,6 +3,7 @@ import dbConnect from "@/lib/mongoose";
 import ProductModel from "@/models/Products";
 import { products as staticProducts } from "@/lib/products";
 
+export const dynamic = "force-dynamic"
 export const metadata = {
   title: "Shop Fridges | Fridge Mall",
   description: "Browse our full range of refrigerators with free delivery and pay on delivery.",
