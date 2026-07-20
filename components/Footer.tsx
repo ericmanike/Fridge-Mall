@@ -126,13 +126,15 @@ export default function Footer() {
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-950/60 border border-emerald-800/40 text-emerald-400">
                   <Mail className="h-3.5 w-3.5" />
                 </div>
-                <span className="truncate">support@fridgemall.com.gh</span>
+                <a href="mailto:support@fridgemall.com" className="truncate"
+                 onClick={(e) => e.stopPropagation()}>support@fridgemall.com</a>
               </li>
+
               <li className="flex items-start gap-2.5 text-slate-300">
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-950/60 border border-emerald-800/40 text-emerald-400 mt-0.5">
                   <MapPin className="h-3.5 w-3.5" />
                 </div>
-                <span>Accra, Ghana</span>
+                <span>Accra - Kumasi, Ghana</span>
               </li>
             </ul>
           </div>

@@ -31,10 +31,10 @@ export default function Header() {
             </a>
             <a
               href="mailto:support@fridgemall.com.gh"
-              className="hidden  items-center gap-2 text-slate-200 hover:text-white transition-colors"
+              className="hidden md:flex items-center gap-2 text-slate-200 hover:text-white transition-colors"
             >
               <Mail className="h-4 w-4 text-emerald-400 shrink-0" />
-              <span className="hidden sm:inline">support@fridgemall.com</span>
+              <span className="hidden md:inline">support@fridgemall.com</span>
             </a>
           </div>
 
