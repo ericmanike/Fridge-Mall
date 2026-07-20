@@ -81,7 +81,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className=" h-screen mx-auto w-full bg-[#E2E8F0] px-4 py-10 sm:px-6">
+    <div className=" h-fit mx-auto w-full bg-[#E2E8F0] px-4 py-10 sm:px-6">
       <h1 className="text-3xl font-bold text-slate-900">Checkout</h1>
       <p className="mt-1 text-slate-600">
         Pay on delivery (cash or MoMo)

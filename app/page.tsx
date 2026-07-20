@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Banknote, Gift, Truck } from "lucide-react";
+import { ArrowRight, Banknote, Gift, Truck, ShieldCheck } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import dbConnect from "@/lib/mongoose";
@@ -13,17 +13,17 @@ import { Metadata } from "next";
 const heroSlides = [
   {
     id: 1,
-    title: "Don't miss out on insider perks",
-    description: "What are you waiting for? Make the most of Fridge Mall account benefits.",
-    ctaText: "Sign in",
-    ctaLink: "/auth/signIn",
+    title: "Earn GHS 50 Cash Rewards",
+    description: "Refer friends & family to Fridge Mall and get GHS 50 instant cash reward on every order.",
+    ctaText: "Start Earning",
+    ctaLink: "/dashboard/referral",
     backgroundImage: "/hero-lifestyle.png",
-    imageAlt: "Insider perks lifestyle",
+    imageAlt: "Earn GHS 50 cash rewards",
   },
   {
     id: 2,
-    title: "Quality fridges, delivered free to your door",
-    description: "Browse top brands, order online, and pay only when we deliver.",
+    title: "Quality fridges, delivered to your door",
+    description: "Browse top brands, order online, and pay on delivery.",
     ctaText: "Shop all fridges",
     ctaLink: "/products",
     backgroundImage: "/hero-fridge-1.png",
@@ -50,13 +50,10 @@ const perks: { title: string; description: string; Icon: LucideIcon }[] = [
   },
 ];
 
-const metadata: Metadata = {
-  title: {
-    default: "Fridge Mall — Pay on Delivery",
-    template: "%s | Fridge Mall",
-  },
+export const metadata: Metadata = {
+  title: "Fridge Mall — Pay on Delivery",
   description:
-    "Shop quality refrigerators in Ghana ,pay on delivery. Refer friends and earn GHS 50 instantly.",
+    "Shop quality refrigerators in Ghana, pay on delivery. Refer friends and earn GHS 50 instantly.",
 };
 
 
@@ -92,8 +89,6 @@ export default async function Home() {
     <div className="bg-white w-full">
       <HeroSlider slides={heroSlides} />
 
-  
-
       <section className="bg-[#E2E8F0] py-14">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="flex items-end justify-between">
@@ -121,56 +116,100 @@ export default async function Home() {
           </div>
         </div>
       </section>
-  <section className="bg-[#E2E8F0] py-14"> 
 
-   <div className="mx-auto max-w-6xl flex flex-wrap items-center justify-between text-black rounded-3xl bg-white/90 px-4 sm:px-6 py-4 md:py-10">
- <div>
-   <h1 className=" text-2xl text-slate-600 font-extrabold"> Refer And Earn</h1>
- <h2 className="font-semibold twxt-1xl"> Refer a friend and earn GHS 50 instantly.</h2>
- </div>
- <Link href="/dashboard/referral" className=" mt-2 max-h-11 flex items-center justify-center  text-[white] px-4 md:px-6 py-2 bg-[#000000] rounded-3xl text-2xl"> Start now</Link>
-
-
-   </div>
-  </section>
-
-  <section className="relative overflow-hidden bg-[#632cf5] text-white py-16 lg:py-24">
-    {/* Decorative background gradients or patterns */}
-    <div className="absolute inset-0 opacity-20 pointer-events-none">
-      <div className="absolute -left-20 -bottom-20 h-96 w-96 rounded-full bg-[#a855f7] blur-3xl" />
-      <div className="absolute -right-20 -top-20 h-96 w-96 rounded-full bg-[#3b82f6] blur-3xl" />
-    </div>
-
-    <div className="relative mx-auto max-w-6xl px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-      {/* Left Column (Text & Button) */}
-      <div className="lg:col-span-5 flex flex-col justify-center items-start">
-        <h2 className="text-4xl font-extrabold sm:text-5xl md:text-6xl tracking-tight leading-[1.15] text-white">
-          Shop the Best. <br />
-          Pay on delivery.
-        </h2>
-        <p className="mt-4 text-lg text-purple-100/90 max-w-md">
-          Discover international brands with discount.
-        </p>
-        <div className="mt-8">
-          <Link
-            href="/products"
-            className="inline-block rounded-full bg-[#E0E7FF] text-[#4F46E5] px-8 py-3.5 text-base font-bold transition-all duration-200 hover:bg-white hover:scale-[1.03] active:scale-[0.98] shadow-md hover:shadow-lg"
-          >
-            Shop now
-          </Link>
+      <section className="bg-[#E2E8F0] py-14"> 
+        <div className="mx-auto max-w-6xl flex flex-wrap items-center justify-between text-black rounded-3xl bg-white/90 px-4 sm:px-6 py-4 md:py-10">
+          <div>
+            <h1 className="text-2xl text-slate-600 font-extrabold">Refer And Earn</h1>
+            <h2 className="font-semibold text-1xl">Refer a friend and earn GHS 50 instantly.</h2>
+          </div>
+          <Link href="/dashboard/referral" className="mt-2 max-h-11 flex items-center justify-center text-[white] px-4 md:px-6 py-2 bg-[#000000] rounded-3xl text-2xl">Start now</Link>
         </div>
-      </div>
-            
-            <div>
+      </section>
 
+      <section className="relative overflow-hidden bg-[#632cf5] text-white py-16 lg:py-24">
+        {/* Decorative background gradients or patterns */}
+        <div className="absolute inset-0 opacity-20 pointer-events-none">
+          <div className="absolute -left-20 -bottom-20 h-96 w-96 rounded-full bg-[#a855f7] blur-3xl" />
+          <div className="absolute -right-20 -top-20 h-96 w-96 rounded-full bg-[#3b82f6] blur-3xl" />
+        </div>
 
-
+        <div className="relative mx-auto max-w-6xl px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          {/* Left Column (Text & Button) */}
+          <div className="lg:col-span-5 flex flex-col justify-center items-start">
+            <h2 className="text-4xl font-extrabold sm:text-5xl md:text-6xl tracking-tight leading-[1.15] text-white">
+              Shop the Best. <br />
+              Pay on delivery.
+            </h2>
+            <p className="mt-4 text-lg text-purple-100/90 max-w-md">
+              Discover international brands with discount.
+            </p>
+            <div className="mt-8">
+              <Link
+                href="/products"
+                className="inline-block rounded-full bg-[#E0E7FF] text-[#4F46E5] px-8 py-3.5 text-base font-bold transition-all duration-200 hover:bg-white hover:scale-[1.03] active:scale-[0.98] shadow-md hover:shadow-lg"
+              >
+                Shop now
+              </Link>
             </div>
-  
-   
-    </div>
-  </section>
+          </div>
+            
+          {/* Right Column: Premium Showcase Cards */}
+          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 p-5 shadow-xl transition-all duration-300 hover:bg-white/15 hover:scale-[1.02]">
+              <div className="h-9 w-9 rounded-xl bg-amber-400/20 text-amber-300 flex items-center justify-center mb-3">
+                <Gift className="h-5 w-5" />
+              </div>
+              <span className="inline-block rounded-full bg-amber-400/20 px-2.5 py-0.5 text-[10px] font-bold text-amber-300 uppercase tracking-wider mb-1.5">
+                Instant Cash
+              </span>
+              <h3 className="text-lg font-bold text-white">GHS 50 Referral Reward</h3>
+              <p className="mt-1.5 text-xs text-purple-100/80 leading-relaxed">
+                Earn GHS 50 straight to your wallet for every friend who orders a fridge.
+              </p>
+            </div>
 
-</div>
-);
+            <div className="rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 p-5 shadow-xl transition-all duration-300 hover:bg-white/15 hover:scale-[1.02]">
+              <div className="h-9 w-9 rounded-xl bg-emerald-400/20 text-emerald-300 flex items-center justify-center mb-3">
+                <Banknote className="h-5 w-5" />
+              </div>
+              <span className="inline-block rounded-full bg-emerald-400/20 px-2.5 py-0.5 text-[10px] font-bold text-emerald-300 uppercase tracking-wider mb-1.5">
+                Zero Upfront Risk
+              </span>
+              <h3 className="text-lg font-bold text-white">Pay on Delivery</h3>
+              <p className="mt-1.5 text-xs text-purple-100/80 leading-relaxed">
+                Inspect your appliance at your doorstep before paying with cash or MoMo.
+              </p>
+            </div>
+
+            <div className="rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 p-5 shadow-xl transition-all duration-300 hover:bg-white/15 hover:scale-[1.02]">
+              <div className="h-9 w-9 rounded-xl bg-blue-400/20 text-blue-300 flex items-center justify-center mb-3">
+                <Truck className="h-5 w-5" />
+              </div>
+              <span className="inline-block rounded-full bg-blue-400/20 px-2.5 py-0.5 text-[10px] font-bold text-blue-300 uppercase tracking-wider mb-1.5">
+                Fast Shipping
+              </span>
+              <h3 className="text-lg font-bold text-white">Doorstep Delivery</h3>
+              <p className="mt-1.5 text-xs text-purple-100/80 leading-relaxed">
+                Quick, safe doorstep delivery across Accra, Kumasi, and all regions in Ghana.
+              </p>
+            </div>
+
+            <div className="rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 p-5 shadow-xl transition-all duration-300 hover:bg-white/15 hover:scale-[1.02]">
+              <div className="h-9 w-9 rounded-xl bg-pink-400/20 text-pink-300 flex items-center justify-center mb-3">
+                <ShieldCheck className="h-5 w-5" />
+              </div>
+              <span className="inline-block rounded-full bg-pink-400/20 px-2.5 py-0.5 text-[10px] font-bold text-pink-300 uppercase tracking-wider mb-1.5">
+                Authentic
+              </span>
+              <h3 className="text-lg font-bold text-white">100% Original Brands</h3>
+              <p className="mt-1.5 text-xs text-purple-100/80 leading-relaxed">
+                Factory-sealed LG, Samsung, Hisense, & Midea fridges with manufacturer warranty.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
 }
