@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-import { formatCurrency } from "@/lib/utils";
+import { Star } from "lucide-react";
+import { formatCurrency, formatCapacity } from "@/lib/utils";
 import { Product } from "@/lib/types";
 import AddToCartButton from "./AddToCartButton";
 
@@ -8,7 +9,21 @@ interface ProductCardProps {
   product: Product;
 }
 
+function getEnergyStars(rating: string | number) {
+  if (!rating) return 5;
+  const num = parseInt(String(rating).replace(/[^0-9]/g, ""), 10);
+  if (!isNaN(num) && num >= 1 && num <= 5) return num;
+  const str = String(rating).toUpperCase();
+  if (str.includes("A+++") || str.includes("5")) return 5;
+  if (str.includes("A++") || str.includes("4")) return 4;
+  if (str.includes("A+") || str.includes("3")) return 3;
+  if (str.includes("A") || str.includes("2")) return 2;
+  return 5;
+}
+
 export default function ProductCard({ product }: ProductCardProps) {
+  const energyStars = getEnergyStars(product.energyRating);
+
   return (
     <Link
       href={`/products/${product.id}`}
@@ -35,9 +50,20 @@ export default function ProductCard({ product }: ProductCardProps) {
           {product.name}
         </h3>
         <div className="mt-2 flex items-center gap-2 text-xs text-slate-500">
-          <span>{product.capacity}</span>
+          <span>{formatCapacity(product.capacity)}</span>
           <span>·</span>
-          <span>{product.energyRating}</span>
+          <span className="inline-flex items-center gap-0.5">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Star
+                key={star}
+                className={`h-3 w-3 ${
+                  star <= energyStars
+                    ? "text-amber-500 fill-amber-500"
+                    : "text-slate-200 fill-slate-200"
+                }`}
+              />
+            ))}
+          </span>
         </div>
         <div className=" h-fit grid grid-cols-1 w-full m-auto justify-center items-center">
         <p className=" pt-3 text-[16px]  font-bold text-slate-900">

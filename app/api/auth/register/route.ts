@@ -16,6 +16,13 @@ export async function POST(req: Request) {
         }
 
         const cleanEmail = email.trim().toLowerCase();
+        if(!phone.startsWith('0') ||  phone.length !== 10){
+           return NextResponse.json(
+            { message: "Invalid phone number. Must start with 0 and be 10 digits long" },
+            
+            { status: 400 }
+           )
+        }
 
         await dbConnect();
 

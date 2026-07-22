@@ -43,7 +43,7 @@ export default function AdminProductsPage() {
   const [brand, setBrand] = useState("");
   const [price, setPrice] = useState("");
   const [capacity, setCapacity] = useState("");
-  const [energyRating, setEnergyRating] = useState("A++");
+  const [energyRating, setEnergyRating] = useState("5");
   const [description, setDescription] = useState("");
   const [features, setFeatures] = useState("");
   const [image, setImage] = useState("/fridges/lg-double-door.svg");
@@ -77,7 +77,7 @@ export default function AdminProductsPage() {
     setBrand("");
     setPrice("");
     setCapacity("");
-    setEnergyRating("A++");
+    setEnergyRating("5");
     setDescription("");
     setFeatures("");
     setImage("/fridges/lg-double-door.svg");
@@ -263,7 +263,7 @@ export default function AdminProductsPage() {
                     Cap: {product.capacity}
                   </span>
                   <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs text-slate-600 font-semibold">
-                    Rating: {product.energyRating}
+                    Rating: {product.energyRating} Stars
                   </span>
                 </div>
                 <p className="mt-3 text-xs text-slate-500 line-clamp-2 leading-relaxed">
@@ -359,17 +359,17 @@ export default function AdminProductsPage() {
                   />
                 </label>
                 <label className="block">
-                  <span className="text-xs font-bold text-slate-600">Energy Rating</span>
+                  <span className="text-xs font-bold text-slate-600">Star Rating</span>
                   <select
                     value={energyRating}
                     onChange={(e) => setEnergyRating(e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white"
+                    className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white font-medium text-slate-800"
                   >
-                    <option value="A+++">A+++</option>
-                    <option value="A++">A++</option>
-                    <option value="A+">A+</option>
-                    <option value="A">A</option>
-                    <option value="B">B</option>
+                    <option value="5">5 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="2">2 Stars</option>
+                    <option value="1">1 Star</option>
                   </select>
                 </label>
               </div>

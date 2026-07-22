@@ -1,39 +1,50 @@
-import { NextResponse } from "next/server";
-import { sendSms } from "@/lib/sms";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { NextResponse } from 'next/server';
+import { sendSMS } from '@/lib/sms';
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session || !session.user) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    const body = await request.json();
+    const { recipient, message, ref, senderid, senderId, messages } = body;
+
+    let messagesArray = [];
+
+    if (messages && Array.isArray(messages)) {
+      messagesArray = messages;
+    } else if (recipient && message) {
+      messagesArray = [
+        {
+          recipient,
+          message,
+          ...(ref ? { ref } : {})
+        }
+      ];
+    } else {
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Missing parameters. Provide either "recipient" and "message", or a "messages" array.' 
+      }, { status: 400 });
     }
 
-    const body = await req.json();
-    const { recipient, message, ref, senderid, messages } = body;
+    console.log('[SMS API ROUTE RECEIVED]', { recipient, senderid: senderid || senderId || 'GadgetCiti', messagesCount: messagesArray.length });
 
-    const payload = messages || (recipient && message ? { recipient, message, ref } : null);
+    const result = await sendSMS({
+      senderId: senderid || senderId || 'GadgetCiti', 
+      messages: messagesArray
+    });
 
-    if (!payload) {
-      return NextResponse.json(
-        { message: "Invalid payload. Provide recipient & message, or messages array." },
-        { status: 400 }
-      );
-    }
-
-    const result = await sendSms(payload, { senderid });
+    console.log('[SMS API ROUTE RESULT]', result);
 
     if (result.success) {
       return NextResponse.json(result);
     } else {
       return NextResponse.json(result, { status: 400 });
     }
-  } catch (error: any) {
-    console.error("API send SMS error:", error);
-    return NextResponse.json(
-      { message: "Internal Server Error", error: error?.message },
-      { status: 500 }
-    );
+
+  } catch (err: any) {
+    console.error('[SMS API ROUTE ERROR]', err);
+    return NextResponse.json({
+      success: false,
+      error: err.message || 'Internal Server Error'
+    }, { status: 500 });
   }
 }

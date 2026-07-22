@@ -1,156 +1,135 @@
-/**
- * Utility for sending SMS via Moolre SMS API.
- * Documentation: POST https://api.moolre.com/open/sms/send
- */
-
-export interface SmsMessage {
-  /** Recipient phone number (e.g. "23324XXXXXXX" or "024XXXXXXX") */
+export interface SMSMessageItem {
   recipient: string;
-  /** SMS text body */
   message: string;
-  /** Optional reference string for tracking */
   ref?: string;
 }
 
-export interface SendSmsOptions {
-  /** Approved Sender ID (max 11 chars). Defaults to process.env.MOOLRE_SENDER_ID || "FridgeMall" */
-  senderid?: string;
-  /** VAS Key for authentication. Defaults to process.env.MOOLRE_VAS_KEY */
-  vaskey?: string;
+export interface SendSMSOptions {
+  senderId?: string;
+  messages: SMSMessageItem[];
 }
 
-export interface MoolreApiResponse {
-  status: number; // 1 for success, 0 for failure
-  code: string;
-  message: string;
-  data?: any;
-  go?: any;
-}
-
-export interface SendSmsResult {
+export interface SMSResponse {
   success: boolean;
-  status: number;
-  code: string;
-  message: string;
+  code?: string | number;
+  message?: string;
   data?: any;
   error?: string;
 }
 
-/**
- * Normalizes a phone number to standard international format without '+' sign.
- * E.g., '0241234567' -> '233241234567'
- */
-export function normalizePhoneNumber(phone: string): string {
-  let cleaned = phone.replace(/\D/g, "");
-  if (cleaned.startsWith("0")) {
-    cleaned = "233" + cleaned.substring(1);
-  }
-  return cleaned;
-}
 
-/**
- * Sends single or bulk SMS messages using Moolre SMS API.
- *
- * @param messages A single message object or array of message objects.
- * @param options Optional sender ID or VAS key overrides.
- * @returns Promise<SendSmsResult>
- *
- * @example
- * // Single SMS
- * const res = await sendSms({
- *   recipient: "0241234567",
- *   message: "Your order #1001 has been confirmed!"
- * });
- *
- * @example
- * // Bulk SMS
- * const res = await sendSms([
- *   { recipient: "0241234567", message: "Hello John" },
- *   { recipient: "0209876543", message: "Hello Mary" },
- * ]);
- */
-export async function sendSms(
-  messages: SmsMessage | SmsMessage[],
-  options?: SendSmsOptions
-): Promise<SendSmsResult> {
-  const vaskey = options?.vaskey || process.env.MOOLRE_VAS_KEY;
-  const senderid = options?.senderid || process.env.MOOLRE_SENDER_ID || "FridgeMall";
+ // Reusable SMS Sender for Moolre API
 
-  if (!vaskey) {
-    console.error("sendSms error: MOOLRE_VAS_KEY environment variable or option is not set.");
-    return {
-      success: false,
-      status: 0,
-      code: "MISSING_KEY",
-      message: "Authentication error: MOOLRE_VAS_KEY is not configured.",
-      error: "MOOLRE_VAS_KEY is missing",
-    };
+export async function sendSMS({
+  senderId = process.env.MOOLRE_DEFAULT_SENDER_ID || 'GadgetCiti',
+  messages
+}: SendSMSOptions): Promise<SMSResponse> {
+  const env = process.env.NEXT_PUBLIC_MOOLRE_ENVIRONMENT || 'live';
+  const baseUrl = env === 'live' ? 'https://api.moolre.com' : 'https://sandbox.moolre.com';
+  const vasKey = process.env.MOOLRE_SMS_KEY!;
+
+  if (!vasKey) {
+    console.error('Moolre SMS key missing in environment variables.');
+    return { success: false, error: 'SMS API key missing' };
   }
 
-  const messageList: SmsMessage[] = Array.isArray(messages) ? messages : [messages];
+  // Ensure Sender ID doesn't exceed 11 chars (GSM limit)
+  const sanitizedSenderId = String(senderId).trim().substring(0, 11);
 
-  if (messageList.length === 0) {
-    return {
-      success: false,
-      status: 0,
-      code: "EMPTY_MESSAGES",
-      message: "No messages provided to send.",
-    };
-  }
-
-  // Format recipient numbers
-  const formattedMessages = messageList.map((msg) => ({
-    recipient: normalizePhoneNumber(msg.recipient),
-    message: msg.message,
-    ...(msg.ref ? { ref: msg.ref } : {}),
+  const formattedMessages = messages.map(msg => ({
+    recipient: String(msg.recipient).replace(/\s+/g, ''),
+    message: String(msg.message),
+    ...(msg.ref ? { ref: String(msg.ref) } : {})
   }));
 
   const payload = {
     type: 1,
-    senderid: senderid.slice(0, 11), // Sender ID max 11 chars
-    messages: formattedMessages,
+    senderid: sanitizedSenderId,
+    messages: formattedMessages
   };
 
+  console.log('[SMS OUTBOUND REQUEST]', {
+    url: `${baseUrl}/open/sms/send`,
+    senderId: sanitizedSenderId,
+    recipientCount: formattedMessages.length,
+    payload
+  });
+
   try {
-    const response = await fetch("https://api.moolre.com/open/sms/send", {
-      method: "POST",
+    const res = await fetch(`${baseUrl}/open/sms/send`, {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        "X-API-VASKEY": vaskey,
+        'Content-Type': 'application/json',
+        'X-API-VASKEY': vasKey
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(payload)
     });
 
-    const data: MoolreApiResponse = await response.json();
+    const data = await res.json();
+    console.log('[SMS MOOLRE RESPONSE]', {
+      httpStatus: res.status,
+      moolreStatus: data.status,
+      code: data.code,
+      message: data.message,
+      fullResponse: data
+    });
 
-    if (response.ok && data.status === 1) {
+    if (res.ok && data.status === 1) {
       return {
         success: true,
-        status: data.status,
-        code: data.code || "SMS01",
-        message: data.message || "Success",
-        data: data.data,
-      };
-    } else {
-      return {
-        success: false,
-        status: data.status ?? response.status,
-        code: data.code || "SMS_FAILED",
-        message: data.message || "Failed to send SMS.",
-        data: data.data,
-        error: data.message,
+        code: data.code,
+        message: data.message,
+        data: data.data
       };
     }
-  } catch (error: any) {
-    console.error("sendSms request exception:", error);
+
+    console.warn('[SMS SEND FAILED]', data);
+
     return {
       success: false,
-      status: 0,
-      code: "NETWORK_ERROR",
-      message: "An error occurred while sending SMS request.",
-      error: error?.message || String(error),
+      code: data.code || 'SMS_ERROR',
+      message: data.message || 'Failed to send SMS',
+      error: data.message
+    };
+  } catch (err: any) {
+    console.error('[SMS ERROR EXCEPTION]', err);
+    return {
+      success: false,
+      error: err.message || 'Internal network error'
     };
   }
 }
 
-export default sendSms;
+
+//  Send a single SMS helper
+ 
+export async function sendSingleSMS(
+  recipient: string,
+  message: string,
+  ref?: string,
+  senderId = 'GadgetCiti'
+): Promise<SMSResponse> {
+  return sendSMS({
+    senderId,
+    messages: [{ recipient, message, ref }]
+  });
+}
+
+//Send bulk SMS notifications helper
+
+export async function sendBulkSMS<T extends { phone: string; name?: string }>(
+  users: T[],
+  messageGenerator: (user: T) => string,
+  senderId = 'GadgetCiti'
+): Promise<SMSResponse> {
+  const messages: SMSMessageItem[] = users.map(user => ({
+    recipient: user.phone,
+    message: messageGenerator(user),
+    ref: `BULK_${Date.now()}_${user.phone}`
+  }));
+
+  return sendSMS({
+    senderId,
+    messages
+  });
+}
