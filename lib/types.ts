@@ -8,6 +8,7 @@ export interface Product {
   description: string;
   features: string[];
   image: string;
+  images?: string[];
   inStock: boolean;
 }
 
@@ -35,7 +36,7 @@ export interface Order {
   deliveryFee: number;
   total: number;
   paymentMethod: "cod";
-  status: "pending" | "confirmed" | "delivered";
+  status: "pending" | "processing" | "delivered" | "cancelled";
   createdAt: string;
   referralCodeUsed?: string;
 }

@@ -10,6 +10,7 @@ import {
   Clock,
   Truck,
   X,
+  XCircle,
   MapPin,
   Phone,
   User,
@@ -48,7 +49,7 @@ interface Order {
   deliveryFee: number;
   total: number;
   paymentMethod: "cod";
-  status: "pending" | "confirmed" | "delivered";
+  status: "pending" | "processing" | "delivered" | "cancelled";
   referralCodeUsed?: string;
   createdAt: string;
 }
@@ -57,7 +58,7 @@ export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "confirmed" | "delivered">("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "processing" | "delivered" | "cancelled">("all");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [editingDeliveryFee, setEditingDeliveryFee] = useState<string>("0");
   const [savingFee, setSavingFee] = useState(false);
@@ -186,7 +187,7 @@ export default function AdminOrdersPage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          {(["all", "pending", "confirmed", "delivered"] as const).map((status) => (
+          {(["all", "pending", "processing", "delivered", "cancelled"] as const).map((status) => (
             <button
               key={status}
               onClick={() => setStatusFilter(status)}
@@ -262,18 +263,22 @@ export default function AdminOrdersPage() {
                     </td>
                     <td className="py-4 px-6">
                       <span
-                        className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider ${
+                        className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-white ${
                           o.status === "delivered"
-                            ? "bg-emerald-100 text-emerald-800"
-                            : o.status === "confirmed"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-amber-100 text-amber-800"
+                            ? "bg-emerald-600"
+                            : o.status === "processing"
+                            ? "bg-blue-600"
+                            : o.status === "cancelled"
+                            ? "bg-red-600"
+                            : "bg-amber-500"
                         }`}
                       >
                         {o.status === "delivered" ? (
                           <CheckCircle className="h-3 w-3" />
-                        ) : o.status === "confirmed" ? (
+                        ) : o.status === "processing" ? (
                           <Truck className="h-3 w-3" />
+                        ) : o.status === "cancelled" ? (
+                          <XCircle className="h-3 w-3" />
                         ) : (
                           <Clock className="h-3 w-3" />
                         )}
@@ -295,8 +300,9 @@ export default function AdminOrdersPage() {
                           className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs font-bold text-slate-700 outline-none focus:border-blue-500"
                         >
                           <option value="pending">Pending</option>
-                          <option value="confirmed">Confirmed</option>
+                          <option value="processing">Processing</option>
                           <option value="delivered">Delivered</option>
+                          <option value="cancelled">Cancelled</option>
                         </select>
                       </div>
                     </td>

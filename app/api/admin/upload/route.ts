@@ -8,9 +8,9 @@ import { v2 as cloudinary } from "cloudinary";
 
 // Configure Cloudinary
 cloudinary.config({
-  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME?.replace(/^["']|["']$/g, "").trim(),
+  api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY?.replace(/^["']|["']$/g, "").trim(),
+  api_secret: process.env.CLOUDINARY_API_SECRET?.replace(/^["']|["']$/g, "").trim(),
 });
 
 export async function POST(req: Request) {

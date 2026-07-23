@@ -135,7 +135,7 @@ export async function PUT(req: Request) {
     const updateFields: any = {};
 
     if (status) {
-      if (!["pending", "confirmed", "delivered"].includes(status)) {
+      if (!["pending", "processing", "delivered", "cancelled"].includes(status)) {
         return NextResponse.json({ message: "Invalid status value" }, { status: 400 });
       }
       updateFields.status = status;

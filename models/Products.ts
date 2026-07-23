@@ -9,6 +9,7 @@ export interface IProduct extends Document{
     description:string;
     features:string[];
     image:string;
+    images?:string[];
     inStock:boolean;
 }
 const ProductSchema=new Schema({
@@ -20,6 +21,7 @@ const ProductSchema=new Schema({
     description:{type:String,required:true},
     features:{type:[String],required:true},
     image:{type:String,required:true},
+    images:{type:[String],default:[]},
     inStock:{type:Boolean,required:true},
 },{
     timestamps:true

@@ -13,6 +13,8 @@ import {
   Truck,
   AlertCircle,
   DollarSign,
+  Clock,
+  XCircle,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -34,7 +36,7 @@ export default async function AdminDashboardPage() {
 
   // Status breakdown
   const pendingOrders = await Order.countDocuments({ status: "pending" });
-  const confirmedOrders = await Order.countDocuments({ status: "confirmed" });
+  const processingOrders = await Order.countDocuments({ status: "processing" });
   const deliveredOrders = await Order.countDocuments({ status: "delivered" });
 
   // Get recent 5 orders
@@ -123,8 +125,8 @@ export default async function AdminDashboardPage() {
           <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-50">
             <Truck className="h-4 w-4 text-blue-500 shrink-0" />
             <div>
-              <p className="text-[10px] font-bold text-slate-400 uppercase">Confirmed &amp; Shipping</p>
-              <p className="text-base font-bold text-slate-800">{confirmedOrders} orders</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase">Processing &amp; Shipping</p>
+              <p className="text-base font-bold text-slate-800">{processingOrders} orders</p>
             </div>
           </div>
           <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-50">
@@ -174,14 +176,25 @@ export default async function AdminDashboardPage() {
                       <td className="py-2.5 px-3 font-bold text-slate-950 whitespace-nowrap">{formatCurrency(o.total)}</td>
                       <td className="py-2.5 pl-3 text-right whitespace-nowrap">
                         <span
-                          className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
+                          className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white ${
                             o.status === "delivered"
-                              ? "bg-emerald-100 text-emerald-800"
-                              : o.status === "confirmed"
-                              ? "bg-blue-100 text-blue-800"
-                              : "bg-amber-100 text-amber-800"
+                              ? "bg-emerald-600"
+                              : o.status === "processing"
+                              ? "bg-blue-600"
+                              : o.status === "cancelled"
+                              ? "bg-red-600"
+                              : "bg-amber-500"
                           }`}
                         >
+                          {o.status === "delivered" ? (
+                            <CheckCircle className="h-3 w-3" />
+                          ) : o.status === "processing" ? (
+                            <Truck className="h-3 w-3" />
+                          ) : o.status === "cancelled" ? (
+                            <XCircle className="h-3 w-3" />
+                          ) : (
+                            <Clock className="h-3 w-3" />
+                          )}
                           {o.status}
                         </span>
                       </td>

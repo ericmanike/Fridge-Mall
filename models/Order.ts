@@ -29,7 +29,7 @@ export interface IOrder extends Document {
   deliveryFee: number;
   total: number;
   paymentMethod: "cod";
-  status: "pending" | "confirmed" | "delivered";
+  status: "pending" | "processing" | "delivered" | "cancelled";
   referralCodeUsed?: string;
   referralRewarded: boolean;
   createdAt: Date;
@@ -69,7 +69,7 @@ const OrderSchema = new Schema<IOrder>(
     status: {
       type: String,
       required: true,
-      enum: ["pending", "confirmed", "delivered"],
+      enum: ["pending", "processing", "delivered", "cancelled"],
       default: "pending",
     },
     referralCodeUsed: { type: String },

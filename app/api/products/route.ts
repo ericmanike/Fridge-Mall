@@ -42,18 +42,24 @@ export async function GET() {
     }
 
     // Map _id to id for frontend compatibility
-    const formattedProducts = products.map((p: any) => ({
-      id: p._id.toString(),
-      name: p.name,
-      brand: p.brand,
-      price: p.price,
-      capacity: p.capacity,
-      energyRating: p.energyRating,
-      description: p.description,
-      features: p.features,
-      image: p.image,
-      inStock: p.inStock,
-    }));
+    const formattedProducts = products.map((p: any) => {
+      const imgs = Array.isArray(p.images) && p.images.length > 0
+        ? p.images.filter((img: string) => Boolean(img)).slice(0, 3)
+        : (p.image ? [p.image] : []);
+      return {
+        id: p._id.toString(),
+        name: p.name,
+        brand: p.brand,
+        price: p.price,
+        capacity: p.capacity,
+        energyRating: p.energyRating,
+        description: p.description,
+        features: p.features,
+        image: imgs[0] || p.image || "",
+        images: imgs.length > 0 ? imgs : [p.image || ""],
+        inStock: p.inStock,
+      };
+    });
 
     return NextResponse.json({ products: formattedProducts });
   } catch (error: any) {
@@ -76,9 +82,18 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { name, brand, price, capacity, energyRating, description, features, image, inStock } = body;
+    const { name, brand, price, capacity, energyRating, description, features, image, images, inStock } = body;
 
-    if (!name || !brand || typeof price !== "number" || !capacity || !energyRating || !description || !features || !image) {
+    let processedImages: string[] = [];
+    if (Array.isArray(images)) {
+      processedImages = images.filter((img: any) => typeof img === "string" && img.trim() !== "").slice(0, 3);
+    }
+    if (processedImages.length === 0 && image) {
+      processedImages = [image];
+    }
+    const primaryImage = processedImages[0] || image || "";
+
+    if (!name || !brand || typeof price !== "number" || !capacity || !energyRating || !description || !features || !primaryImage) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
     }
 
@@ -90,9 +105,12 @@ export async function POST(req: Request) {
       energyRating,
       description,
       features: Array.isArray(features) ? features : features.split(",").map((f: string) => f.trim()),
-      image,
+      image: primaryImage,
+      images: processedImages,
       inStock: typeof inStock === "boolean" ? inStock : true,
     });
+
+    const returnedImgs = newProduct.images && newProduct.images.length > 0 ? newProduct.images : [newProduct.image];
 
     return NextResponse.json({
       message: "Product created successfully",
@@ -106,6 +124,7 @@ export async function POST(req: Request) {
         description: newProduct.description,
         features: newProduct.features,
         image: newProduct.image,
+        images: returnedImgs,
         inStock: newProduct.inStock,
       },
     }, { status: 201 });
@@ -129,31 +148,46 @@ export async function PUT(req: Request) {
     }
 
     const body = await req.json();
-    const { id, name, brand, price, capacity, energyRating, description, features, image, inStock } = body;
+    const { id, name, brand, price, capacity, energyRating, description, features, image, images, inStock } = body;
 
     if (!id) {
       return NextResponse.json({ message: "Missing product id" }, { status: 400 });
     }
 
+    const updateFields: any = {};
+    if (name !== undefined) updateFields.name = name;
+    if (brand !== undefined) updateFields.brand = brand;
+    if (price !== undefined) updateFields.price = price;
+    if (capacity !== undefined) updateFields.capacity = capacity;
+    if (energyRating !== undefined) updateFields.energyRating = energyRating;
+    if (description !== undefined) updateFields.description = description;
+    if (features !== undefined) {
+      updateFields.features = Array.isArray(features) ? features : features ? features.split(",").map((f: string) => f.trim()) : undefined;
+    }
+    if (inStock !== undefined) updateFields.inStock = inStock;
+
+    if (Array.isArray(images)) {
+      const processedImages = images.filter((img: any) => typeof img === "string" && img.trim() !== "").slice(0, 3);
+      updateFields.images = processedImages;
+      if (processedImages.length > 0) {
+        updateFields.image = processedImages[0];
+      }
+    } else if (image !== undefined) {
+      updateFields.image = image;
+      updateFields.images = [image];
+    }
+
     const updatedProduct = await ProductModel.findByIdAndUpdate(
       id,
-      {
-        name,
-        brand,
-        price,
-        capacity,
-        energyRating,
-        description,
-        features: Array.isArray(features) ? features : features ? features.split(",").map((f: string) => f.trim()) : undefined,
-        image,
-        inStock,
-      },
+      updateFields,
       { new: true }
     );
 
     if (!updatedProduct) {
       return NextResponse.json({ message: "Product not found" }, { status: 404 });
     }
+
+    const returnedImgs = updatedProduct.images && updatedProduct.images.length > 0 ? updatedProduct.images : [updatedProduct.image];
 
     return NextResponse.json({
       message: "Product updated successfully",
@@ -167,12 +201,39 @@ export async function PUT(req: Request) {
         description: updatedProduct.description,
         features: updatedProduct.features,
         image: updatedProduct.image,
+        images: returnedImgs,
         inStock: updatedProduct.inStock,
       },
     });
   } catch (error: any) {
     console.error("PUT products API error:", error);
     return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+  }
+}
+
+// @ts-ignore
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME?.trim(),
+  api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY?.trim(),
+  api_secret: process.env.CLOUDINARY_API_SECRET?.trim(),
+});
+
+function getCloudinaryPublicId(url: string): string | null {
+  if (!url || typeof url !== "string" || !url.includes("res.cloudinary.com")) return null;
+  try {
+    const parts = url.split("/upload/");
+    if (parts.length < 2) return null;
+    let path = parts[1];
+    path = path.replace(/^v\d+\//, "");
+    const lastDotIndex = path.lastIndexOf(".");
+    if (lastDotIndex !== -1) {
+      path = path.substring(0, lastDotIndex);
+    }
+    return path;
+  } catch {
+    return null;
   }
 }
 
@@ -202,7 +263,28 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ message: "Product not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ message: "Product deleted successfully" });
+    // Automatically delete associated images from Cloudinary
+    const imageUrls = new Set<string>();
+    if (deletedProduct.image) imageUrls.add(deletedProduct.image);
+    if (Array.isArray(deletedProduct.images)) {
+      deletedProduct.images.forEach((img: string) => {
+        if (img) imageUrls.add(img);
+      });
+    }
+
+    for (const url of imageUrls) {
+      const publicId = getCloudinaryPublicId(url);
+      if (publicId) {
+        try {
+          await cloudinary.uploader.destroy(publicId);
+          console.log(`Successfully deleted Cloudinary asset: ${publicId}`);
+        } catch (err) {
+          console.error(`Failed to delete Cloudinary asset ${publicId}:`, err);
+        }
+      }
+    }
+
+    return NextResponse.json({ message: "Product and associated images deleted successfully" });
   } catch (error: any) {
     console.error("DELETE products API error:", error);
     return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });

@@ -28,6 +28,7 @@ interface Product {
   description: string;
   features: string[];
   image: string;
+  images?: string[];
   inStock: boolean;
 }
 
@@ -46,7 +47,7 @@ export default function AdminProductsPage() {
   const [energyRating, setEnergyRating] = useState("5");
   const [description, setDescription] = useState("");
   const [features, setFeatures] = useState("");
-  const [image, setImage] = useState("/fridges/lg-double-door.svg");
+  const [images, setImages] = useState<string[]>(["/fridges/lg-double-door.svg", "", ""]);
   const [inStock, setInStock] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -80,7 +81,7 @@ export default function AdminProductsPage() {
     setEnergyRating("5");
     setDescription("");
     setFeatures("");
-    setImage("/fridges/lg-double-door.svg");
+    setImages(["/fridges/lg-double-door.svg", "", ""]);
     setInStock(true);
     setIsModalOpen(true);
   };
@@ -94,7 +95,8 @@ export default function AdminProductsPage() {
     setEnergyRating(product.energyRating);
     setDescription(product.description);
     setFeatures(product.features.join(", "));
-    setImage(product.image);
+    const existing = product.images && product.images.length > 0 ? product.images : [product.image];
+    setImages([existing[0] || "", existing[1] || "", existing[2] || ""]);
     setInStock(product.inStock);
     setIsModalOpen(true);
   };
@@ -106,6 +108,12 @@ export default function AdminProductsPage() {
       return;
     }
 
+    const validImages = images.map((img) => img.trim()).filter(Boolean);
+    if (validImages.length === 0) {
+      toast.error("Please add at least 1 product image");
+      return;
+    }
+
     setSaving(true);
     const parsedPrice = parseFloat(price);
     const featuresArray = features.split(",").map((f) => f.trim()).filter(Boolean);
@@ -113,8 +121,8 @@ export default function AdminProductsPage() {
     try {
       const method = editingProduct ? "PUT" : "POST";
       const payload = editingProduct
-        ? { id: editingProduct.id, name, brand, price: parsedPrice, capacity, energyRating, description, features: featuresArray, image, inStock }
-        : { name, brand, price: parsedPrice, capacity, energyRating, description, features: featuresArray, image, inStock };
+        ? { id: editingProduct.id, name, brand, price: parsedPrice, capacity, energyRating, description, features: featuresArray, image: validImages[0], images: validImages, inStock }
+        : { name, brand, price: parsedPrice, capacity, energyRating, description, features: featuresArray, image: validImages[0], images: validImages, inStock };
 
       const res = await fetch("/api/products", {
         method,
@@ -400,67 +408,93 @@ export default function AdminProductsPage() {
                 />
               </label>
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <span className="text-xs font-bold text-slate-600 flex items-center gap-1.5">
-                    Product Image
+              {/* Multi Image Upload Section (Up to 3 images) */}
+              <div className="space-y-3 border-t border-b border-slate-100 py-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-700">
+                    Product Images (Up to 3)
                   </span>
-                  <div className="flex items-center gap-3">
-                    {/* Image Preview */}
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
-                      {image ? (
-                        <img src={image} alt="Preview" className="h-full w-full object-contain" />
-                      ) : (
-                        <span className="text-slate-350 text-[10px] font-bold">No Image</span>
-                      )}
-                    </div>
+                  <span className="text-[11px] text-slate-400 font-medium">
+                    {images.filter(Boolean).length} of 3 uploaded
+                  </span>
+                </div>
 
-                    {/* Next-Cloudinary CldUploadWidget */}
-                    <div className="flex-1">
-                      <CldUploadWidget
-                        uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "fridgemall_products"}
-                        onSuccess={(result) => {
-                          if (result.info && typeof result.info !== "string") {
-                            setImage(result.info.secure_url);
-                            toast.success("Image uploaded successfully!");
-                          }
-                        }}
-                      >
-                        {({ open }) => (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {[0, 1, 2].map((idx) => (
+                    <div key={idx} className="flex flex-col items-center justify-between gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200/80 text-center">
+                      <span className="text-[11px] font-bold text-slate-600">
+                        {idx === 0 ? "Main Image *" : `Image ${idx + 1}`}
+                      </span>
+
+                      {/* Thumbnail Preview */}
+                      <div className="flex h-16 w-16 items-center justify-center rounded-lg border border-slate-200 bg-white overflow-hidden relative shadow-xs">
+                        {images[idx] ? (
+                          <img src={images[idx]} alt={`Slot ${idx + 1}`} className="h-full w-full object-contain p-1" />
+                        ) : (
+                          <span className="text-slate-350 text-[10px] font-bold">No Image</span>
+                        )}
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex items-center gap-1.5 w-full">
+                        <CldUploadWidget
+                          uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "fridgemall_products"}
+                          onSuccess={(result) => {
+                            if (result.info && typeof result.info !== "string") {
+                              const url = (result.info as any).secure_url;
+                              setImages((prev) => {
+                                const newImgs = [...prev];
+                                newImgs[idx] = url;
+                                return newImgs;
+                              });
+                              toast.success(`Image ${idx + 1} uploaded!`);
+                            }
+                          }}
+                        >
+                          {({ open }) => (
+                            <button
+                              type="button"
+                              onClick={() => open()}
+                              className="flex-1 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 py-1 text-xs font-bold text-blue-600 transition cursor-pointer"
+                            >
+                              Upload
+                            </button>
+                          )}
+                        </CldUploadWidget>
+
+                        {images[idx] && (
                           <button
                             type="button"
-                            onClick={() => open()}
-                            className="relative flex w-full cursor-pointer items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white hover:bg-slate-50 px-3 py-2.5 text-xs font-bold text-slate-700 transition select-none active:scale-[0.98]"
+                            onClick={() => {
+                              setImages((prev) => {
+                                const newImgs = [...prev];
+                                newImgs[idx] = "";
+                                return newImgs;
+                              });
+                            }}
+                            className="rounded-lg p-1 bg-red-50 hover:bg-red-100 text-red-600 transition cursor-pointer border border-red-200"
+                            title="Remove Image"
                           >
-                            <span>Upload Image</span>
+                            <X className="h-3.5 w-3.5" />
                           </button>
                         )}
-                      </CldUploadWidget>
+                      </div>
                     </div>
-                  </div>
+                  ))}
+                </div>
+              </div>
 
-                  {/* Manual input override */}
-                  <input
-                    type="text"
-                    required
-                    value={image}
-                    onChange={(e) => setImage(e.target.value)}
-                    placeholder="Or enter image URL manually..."
-                    className="w-full rounded-lg border border-slate-200 px-3 py-1.5 text-xs outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
-                <div className="flex items-center gap-3 mt-6">
-                  <input
-                    type="checkbox"
-                    id="modalInStock"
-                    checked={inStock}
-                    onChange={(e) => setInStock(e.target.checked)}
-                    className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <label htmlFor="modalInStock" className="text-sm font-bold text-slate-700 select-none">
-                    Product is In Stock
-                  </label>
-                </div>
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  id="modalInStock"
+                  checked={inStock}
+                  onChange={(e) => setInStock(e.target.checked)}
+                  className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                />
+                <label htmlFor="modalInStock" className="text-sm font-bold text-slate-700 select-none">
+                  Product is In Stock
+                </label>
               </div>
 
               <div className="flex items-center justify-end gap-3 border-t border-slate-100 pt-4 mt-6">

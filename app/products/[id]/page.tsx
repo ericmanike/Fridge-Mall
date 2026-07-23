@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, BadgeCheck, Star } from "lucide-react";
 import AddToCartButton from "@/components/AddToCartButton";
+import ProductImageGallery from "@/components/ProductImageGallery";
 import { formatCurrency, formatCapacity } from "@/lib/utils";
 import dbConnect from "@/lib/mongoose";
 import ProductModel from "@/models/Products";
@@ -28,7 +29,10 @@ async function fetchProduct(id: string) {
   // 1. Try static list first
   const staticProduct = staticProducts.find((p) => p.id === id);
   if (staticProduct) {
-    return staticProduct;
+    return {
+      ...staticProduct,
+      images: staticProduct.images || [staticProduct.image],
+    };
   }
 
   // 2. Try database
@@ -36,6 +40,9 @@ async function fetchProduct(id: string) {
     await dbConnect();
     const dbProduct = await ProductModel.findById(id);
     if (dbProduct) {
+      const imgs = Array.isArray(dbProduct.images) && dbProduct.images.length > 0
+        ? dbProduct.images.filter((img: string) => Boolean(img)).slice(0, 3)
+        : (dbProduct.image ? [dbProduct.image] : []);
       return {
         id: dbProduct._id.toString(),
         name: dbProduct.name,
@@ -45,7 +52,8 @@ async function fetchProduct(id: string) {
         energyRating: dbProduct.energyRating,
         description: dbProduct.description,
         features: dbProduct.features,
-        image: dbProduct.image,
+        image: imgs[0] || dbProduct.image || "",
+        images: imgs.length > 0 ? imgs : [dbProduct.image || ""],
         inStock: dbProduct.inStock,
       };
     }
@@ -86,15 +94,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
       </Link>
 
       <div className="mt-6 grid gap-10 lg:grid-cols-2 items-center justify-center">
-        <div className="flex w-fit items-center justify-center rounded-2xl bg-linear-to-b from-sky-50 to-white px-8 p-4">
-          <Image
-            src={product.image}
-            alt={product.name}
-            width={300}
-            height={200}
-            className="object-cover rounded-2xl"
-          />
-        </div>
+        <ProductImageGallery
+          images={product.images && product.images.length > 0 ? product.images : [product.image]}
+          alt={product.name}
+        />
 
         <div>
           <p className="text-sm font-semibold uppercase tracking-wide text-yellow-700">
@@ -150,7 +153,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </ul>
 
           <div className="mt-8 ">
-            <AddToCartButton product={product} className="w-[80%] md:w-fit w-full py-4" />
+            <AddToCartButton product={product} className="w-[100%] md:w-[50%]  py-3" />
           </div>
         </div>
       </div>

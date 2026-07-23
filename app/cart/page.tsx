@@ -106,9 +106,9 @@ export default function CartPage() {
               <span>Subtotal</span>
               <span>{formatCurrency(subtotal)}</span>
             </div>
-            <div className="flex justify-between text-emerald-600">
+            <div className="flex justify-between text-slate-600">
               <span>Delivery Fee</span>
-              <span className="font-medium">Not set </span>
+              <span className="font-medium text-slate-600">Not set</span>
             </div>
             <div className="flex justify-between border-t border-slate-200 pt-2 text-base font-bold text-slate-900">
               <span>Total (pay on delivery)</span>

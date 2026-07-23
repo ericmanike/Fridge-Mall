@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ShoppingBag, Loader2, ArrowRight } from "lucide-react";
+import { ShoppingBag, Loader2, ArrowRight, CheckCircle, Truck, Clock, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
 import { formatCurrency } from "@/lib/utils";
@@ -102,14 +102,25 @@ export default function OrdersPage() {
                   <td className="py-4 px-4 font-bold text-slate-950">{formatCurrency(o.total)}</td>
                   <td className="py-4 pl-4 text-right">
                     <span
-                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold text-white ${
                         o.status === "delivered"
-                          ? "bg-emerald-100 text-emerald-800"
-                          : o.status === "confirmed"
-                          ? "bg-blue-100 text-blue-800"
-                          : "bg-amber-100 text-amber-800"
+                          ? "bg-emerald-600"
+                          : o.status === "processing"
+                          ? "bg-blue-600"
+                          : o.status === "cancelled"
+                          ? "bg-red-600"
+                          : "bg-amber-500"
                       }`}
                     >
+                      {o.status === "delivered" ? (
+                        <CheckCircle className="h-3 w-3" />
+                      ) : o.status === "processing" ? (
+                        <Truck className="h-3 w-3" />
+                      ) : o.status === "cancelled" ? (
+                        <XCircle className="h-3 w-3" />
+                      ) : (
+                        <Clock className="h-3 w-3" />
+                      )}
                       {o.status}
                     </span>
                   </td>

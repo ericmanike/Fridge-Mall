@@ -67,7 +67,7 @@ export default function CheckoutPage() {
         </h1>
         <p className="mt-2 text-slate-600">
           Order <span className="font-mono font-semibold">{orderId}</span> is
-          confirmed. We&apos;ll call you to arrange free delivery. Pay when your
+          confirmed. We&apos;ll call you to arrange delivery. Pay when your
           fridge arrives.
         </p>
         <Link
@@ -210,9 +210,9 @@ export default function CheckoutPage() {
               <span>Subtotal</span>
               <span>{formatCurrency(subtotal)}</span>
             </div>
-            <div className="flex justify-between text-emerald-600">
+            <div className="flex justify-between text-slate-600">
               <span>Delivery Fee</span>
-              <span className="font-medium">Not Set Yet</span>
+              <span className="font-medium text-slate-600">Not set</span>
             </div>
             <div className="flex justify-between pt-2 text-base font-bold text-slate-900">
               <span>Pay on delivery</span>
