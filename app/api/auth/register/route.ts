@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import dbConnect from "@/lib/mongoose";
 import User from "@/models/User";
-import { authOptions } from "@/lib/auth";
 
 export async function POST(req: Request) {
     try {
