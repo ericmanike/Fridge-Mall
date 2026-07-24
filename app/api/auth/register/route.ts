@@ -14,25 +14,27 @@ export async function POST(req: Request) {
                 { status: 400 }
             );
         }
+         
+        if(password.length < 8){
+            return NextResponse.json(
+                { message: "Password must be at least 8 characters" },
+                { status: 400 }
+            );  
+         }
 
         const cleanEmail = email.trim().toLowerCase();
-        if(!phone.startsWith('0') ||  phone.length !== 10){
-           return NextResponse.json(
-            { message: "Invalid phone number. Must start with 0 and be 10 digits long" },
-            
-            { status: 400 }
-           )
-        }
-
         await dbConnect();
 
-        const existingUser = await User.findOne({ email: cleanEmail });
-        if (existingUser) {
-            return NextResponse.json(
-                { message: "User already exists" },
-                { status: 400 }
-            );
-        }
+        // const existingUser = await User.findOne({ email: cleanEmail });
+        // if (existingUser) {
+        //     console.log("User already exists", existingUser);
+        //     return NextResponse.json(
+
+
+        //         { message: "User already exists" },
+        //         { status: 400 }
+        //     );
+        // }
 
         // Validate referredBy code if provided
         let validReferredBy = undefined;

@@ -20,7 +20,7 @@ const UserSchema = new Schema<IUser>(
         password: { type: String, select: false },
         role: { type: String, enum: ['user','agent', 'admin', 'moderator'], default: 'user' },
         walletBalance: { type: Number, default: 0.00 },
-        phone: { type: String },
+        phone: { type: String, unique: true },
         code: { type: String, unique: true },
         referredBy: { type: String },
     },

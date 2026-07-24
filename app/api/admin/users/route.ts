@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/mongoose";
 import User from "@/models/User";
 
+
+
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
@@ -84,3 +86,48 @@ export async function PUT(req: Request) {
     return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    await dbConnect();
+    const currentUser = await User.findOne({ email: session.user.email });
+    if (!currentUser || currentUser.role !== "admin") {
+      return NextResponse.json({ message: "Forbidden: Admins only" }, { status: 403 });
+    }
+
+    let userId: string | null = null;
+    try {
+      const body = await req.json();
+      userId = body.userId;
+    } catch {
+      const url = new URL(req.url);
+      userId = url.searchParams.get("userId");
+    }
+
+    if (!userId) {
+      return NextResponse.json({ message: "Missing userId" }, { status: 400 });
+    }
+
+    if (userId.toString() === currentUser._id.toString()) {
+      return NextResponse.json({ message: "You cannot delete your own account" }, { status: 400 });
+    }
+
+    const targetUser = await User.findById(userId);
+    if (!targetUser) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+
+    await User.findByIdAndDelete(userId);
+
+    return NextResponse.json({ message: "User deleted successfully" });
+  } catch (error: any) {
+    console.error("DELETE admin users API error:", error);
+    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+  }
+}
+

@@ -29,7 +29,7 @@ export default function SignInPage() {
             const res = await signIn("credentials", {
                 email: cleanEmail,
                 password,
-                redirect: true,
+                redirect: false,
                 callbackUrl: sessionStorage.getItem("callbackUrl") || "/dashboard",  
             });
 

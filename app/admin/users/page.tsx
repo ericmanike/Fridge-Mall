@@ -6,12 +6,13 @@ import {
   Loader2,
   Users,
   Edit2,
-  CheckCircle,
+  Trash2,
+
   X,
   Shield,
-  Phone,
   Mail,
   User,
+  AlertTriangle,
 } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -33,10 +34,12 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [editingUser, setEditingUser] = useState<UserProfile | null>(null);
+  const [userToDelete, setUserToDelete] = useState<UserProfile | null>(null);
 
   // Form State
   const [role, setRole] = useState<UserProfile["role"]>("user");
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -95,6 +98,38 @@ export default function AdminUsersPage() {
     }
   };
 
+  const handleDeleteUser = async () => {
+    if (!userToDelete) return;
+    setDeleting(true);
+
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: userToDelete._id,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success(`User ${userToDelete.name} deleted successfully`);
+        setUserToDelete(null);
+        if (editingUser?._id === userToDelete._id) {
+          setEditingUser(null);
+        }
+        fetchUsers();
+      } else {
+        toast.error(data.message || "Failed to delete user");
+      }
+    } catch (err) {
+      toast.error("An error occurred while deleting user");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   const filteredUsers = users.filter(
     (u) =>
       u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -110,7 +145,7 @@ export default function AdminUsersPage() {
       <div>
         <h1 className="text-3xl font-black text-slate-900">Manage Users</h1>
         <p className="mt-1 text-sm text-slate-500">
-          Monitor registered shoppers and edit account roles.
+          Monitor registered shoppers, edit account roles, and manage user accounts.
         </p>
       </div>
 
@@ -155,7 +190,7 @@ export default function AdminUsersPage() {
                   <tr key={u._id} className="hover:bg-slate-50/50 transition">
                     <td className="py-4 px-6">
                       <div>
-                        <p className="font-bold text-slate-855 flex items-center gap-1.5">
+                        <p className="font-bold text-slate-850 flex items-center gap-1.5">
                           {u.name}
                         </p>
                         <p className="text-xs text-slate-500">{u.email}</p>
@@ -191,13 +226,22 @@ export default function AdminUsersPage() {
                       })}
                     </td>
                     <td className="py-4 px-6 text-right">
-                      <button
-                        onClick={() => openEditModal(u)}
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 px-3 py-2 text-xs font-bold text-slate-700 transition cursor-pointer"
-                      >
-                        <Edit2 className="h-3.5 w-3.5" />
-                        Edit User
-                      </button>
+                      <div className="inline-flex items-center gap-2">
+                        <button
+                          onClick={() => openEditModal(u)}
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 px-3 py-2 text-xs font-bold text-slate-700 transition cursor-pointer"
+                        >
+                          <Edit2 className="h-3.5 w-3.5" />
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => setUserToDelete(u)}
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 hover:bg-red-50 px-3 py-2 text-xs font-bold text-red-600 transition cursor-pointer"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -248,26 +292,77 @@ export default function AdminUsersPage() {
                 </select>
               </div>
 
-
-
-              <div className="flex items-center justify-end gap-3 border-t border-slate-100 pt-4 mt-6">
+              <div className="flex items-center justify-between border-t border-slate-100 pt-4 mt-6">
                 <button
                   type="button"
-                  onClick={() => setEditingUser(null)}
-                  className="rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-5 py-2.5 text-sm font-bold text-slate-700 transition cursor-pointer"
+                  onClick={() => {
+                    setUserToDelete(editingUser);
+                  }}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 px-4 py-2.5 text-sm font-bold text-red-600 transition cursor-pointer"
                 >
-                  Cancel
+                  <Trash2 className="h-4 w-4" />
+                  Delete User
                 </button>
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 px-6 py-2.5 text-sm font-bold text-white transition cursor-pointer disabled:opacity-50"
-                >
-                  {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-                  {saving ? "Updating..." : "Update Privileges"}
-                </button>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setEditingUser(null)}
+                    className="rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-4 py-2.5 text-sm font-bold text-slate-700 transition cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={saving}
+                    className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 px-5 py-2.5 text-sm font-bold text-white transition cursor-pointer disabled:opacity-50"
+                  >
+                    {saving && <Loader2 className="h-4 w-4 animate-spin" />}
+                    {saving ? "Updating..." : "Update Role"}
+                  </button>
+                </div>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {userToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl border border-slate-100 animate-in zoom-in-95 duration-200">
+            <div className="flex items-center gap-3 text-red-600 mb-4">
+              <div className="rounded-full bg-red-100 p-2.5">
+                <AlertTriangle className="h-6 w-6" />
+              </div>
+              <h2 className="text-lg font-bold text-slate-900">
+                Delete User Account?
+              </h2>
+            </div>
+
+            <p className="text-sm text-slate-600 mb-6">
+              Are you sure you want to delete <span className="font-bold text-slate-900">{userToDelete.name}</span> ({userToDelete.email})? This action will permanently remove the user and cannot be undone.
+            </p>
+
+            <div className="flex items-center justify-end gap-3 border-t border-slate-100 pt-4">
+              <button
+                type="button"
+                onClick={() => setUserToDelete(null)}
+                disabled={deleting}
+                className="rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-5 py-2.5 text-sm font-bold text-slate-700 transition cursor-pointer disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleDeleteUser}
+                disabled={deleting}
+                className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-red-600 hover:bg-red-700 px-6 py-2.5 text-sm font-bold text-white transition cursor-pointer disabled:opacity-50"
+              >
+                {deleting && <Loader2 className="h-4 w-4 animate-spin" />}
+                {deleting ? "Deleting..." : "Confirm Delete"}
+              </button>
+            </div>
           </div>
         </div>
       )}

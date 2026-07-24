@@ -1,50 +1,65 @@
 import { NextResponse } from 'next/server';
-import { sendSMS } from '@/lib/sms';
+
+async function sendArkeselSMS(
+  recipients: string[],
+  message: string,
+  senderId: string
+) {
+  const apiKey = process.env.ARKESEL_API_KEY;
+
+  if (!apiKey) {
+    return { success: false, error: 'ARKESEL_API_KEY missing'};
+  }
+
+  const payload = {
+    sender: String(senderId).trim().substring(0, 11),
+    message,
+    recipients
+  };
+
+  console.log('[SMS ARKESEL REQUEST]', {
+    sender: payload.sender,
+    recipientCount: recipients.length,
+    recipients,
+    message
+  });
+
+  const res = await fetch('https://sms.arkesel.com/api/v2/sms/send', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'api-key': apiKey
+    },
+    body: JSON.stringify(payload)
+  });
+
+  const data = await res.json();
+  console.log('[SMS ARKESEL RESPONSE]', data);
+
+  if (data.status === 'success') {
+    return { success: true, message: data.message, data: data.data };
+  }
+
+  return { success: false, message: data.message, error: data.message };
+}
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { recipient, message, ref, senderid, senderId, messages } = body;
+    const { recipient, message} = body;
 
-    let messagesArray = [];
+    const senderId = process.env.ARKESEL_SENDER_ID || 'fridgemall';
 
-    if (messages && Array.isArray(messages)) {
-      messagesArray = messages;
-    } else if (recipient && message) {
-      messagesArray = [
-        {
-          recipient,
-          message,
-          ...(ref ? { ref } : {})
-        }
-      ];
-    } else {
-      return NextResponse.json({ 
-        success: false, 
-        error: 'Missing parameters. Provide either "recipient" and "message", or a "messages" array.' 
-      }, { status: 400 });
-    }
 
-    console.log('[SMS API ROUTE RECEIVED]', { recipient, senderid: senderid || senderId || 'GadgetCiti', messagesCount: messagesArray.length });
+    const result = await sendArkeselSMS([recipient], message, senderId);
 
-    const result = await sendSMS({
-      senderId: senderid || senderId || 'GadgetCiti', 
-      messages: messagesArray
-    });
-
-    console.log('[SMS API ROUTE RESULT]', result);
-
-    if (result.success) {
-      return NextResponse.json(result);
-    } else {
-      return NextResponse.json(result, { status: 400 });
-    }
+    return NextResponse.json(result, { status: result.success ? 200 : 400 });
 
   } catch (err: any) {
     console.error('[SMS API ROUTE ERROR]', err);
-    return NextResponse.json({
-      success: false,
-      error: err.message || 'Internal Server Error'
-    }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: err.message || 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 }
