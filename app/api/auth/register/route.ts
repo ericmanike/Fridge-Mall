@@ -14,8 +14,6 @@ export async function POST(req: Request) {
                 { status: 400 }
             );
         }
-         
-     
 
         const cleanEmail = email.trim().toLowerCase();
         await dbConnect();
