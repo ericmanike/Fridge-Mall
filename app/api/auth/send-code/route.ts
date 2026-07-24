@@ -34,16 +34,16 @@ export async function POST(request: Request) {
         return NextResponse.json({message:'Too many request! Try after 3 minutes '})
       }
 
-       const existingUser = await User.findOne({ phone });
-        if (existingUser) {
-            console.log("User with this phone number already exists", existingUser);
-            return NextResponse.json(
+      //  const existingUser = await User.findOne({ phone });
+      //   if (existingUser) {
+      //       console.log("User with this phone number already exists", existingUser);
+      //       return NextResponse.json(
 
               
-                { message: "User with this phone number already exists" },
-                { status: 400 }
-            );
-        }
+      //           { message: "User with this phone number already exists" },
+      //           { status: 400 }
+      //       );
+      //   }
 
       
 
