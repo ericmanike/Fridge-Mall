@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/mongoose";
 import Order from "@/models/Order";
 import User from "@/models/User";
+import mongoose from "mongoose";
 
 export async function GET(req: Request) {
   try {
@@ -156,15 +157,35 @@ export async function PUT(req: Request) {
       return NextResponse.json({ message: "Order not found" }, { status: 404 });
     }
 
-    // Process referral reward if order is delivered and not yet rewarded
+    // Process referral reward atomically if order is delivered and not yet rewarded
     if (updatedOrder.status === "delivered" && updatedOrder.referralCodeUsed && !updatedOrder.referralRewarded) {
-      const referrer = await User.findOne({ code: updatedOrder.referralCodeUsed });
-      if (referrer) {
-        referrer.walletBalance = (referrer.walletBalance || 0) + 50;
-        await referrer.save();
+      const session = await mongoose.startSession();
+      try {
+        await session.withTransaction(async () => {
+          const referrer = await User.findOne(
+            { code: updatedOrder.referralCodeUsed },
+            null,
+            { session }
+          );
+          if (!referrer) return; // no referrer — nothing to do, transaction is a no-op
 
-        updatedOrder.referralRewarded = true;
-        await updatedOrder.save();
+          await User.updateOne(
+            { _id: referrer._id },
+            { $inc: { walletBalance: 50 } },
+            { session }
+          );
+
+          await Order.updateOne(
+            { _id: updatedOrder._id },
+            { $set: { referralRewarded: true } },
+            { session }
+          );
+
+          // Keep the in-memory object in sync for the response
+          updatedOrder.referralRewarded = true;
+        });
+      } finally {
+        await session.endSession();
       }
     }
 
