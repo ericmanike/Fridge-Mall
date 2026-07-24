@@ -188,7 +188,7 @@ export default function SignUpPage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Full Name"
-              className="block w-full rounded-xl border border-slate-200 bg-[#f4f5f7] py-3.5 pl-12 pr-4 text-sm text-slate-800 placeholder-slate-400 outline-none transition-all duration-200 focus:border-slate-400 focus:bg-white focus:ring-1 focus:ring-slate-400"
+              className="block w-full rounded-xl border border-slate-200 bg-[#f4f5f7] py-3.5 pl-12 pr-4 text-[16px] text-slate-800 placeholder-slate-400 outline-none transition-all duration-200 focus:border-slate-400 focus:bg-white focus:ring-1 focus:ring-slate-700"
             />
           </div>
 
@@ -204,7 +204,7 @@ export default function SignUpPage() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="Phone Number (e.g. 0544919953)"
-              className="block w-full rounded-xl border border-slate-200 bg-[#f4f5f7] py-3.5 pl-12 pr-4 text-sm text-slate-800 placeholder-slate-400 outline-none transition-all duration-200 focus:border-slate-400 focus:bg-white focus:ring-1 focus:ring-slate-400"
+              className="block w-full rounded-xl border border-slate-200 bg-[#f4f5f7] py-3.5 pl-12 pr-4 text-[16px] text-slate-800 placeholder-slate-400 outline-none transition-all duration-200 focus:border-slate-400 focus:bg-white focus:ring-1 focus:ring-slate-700"
             />
           </div>
 
@@ -220,7 +220,7 @@ export default function SignUpPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email Address"
-              className="block w-full rounded-xl border border-slate-200 bg-[#f4f5f7] py-3.5 pl-12 pr-4 text-sm text-slate-800 placeholder-slate-400 outline-none transition-all duration-200 focus:border-slate-400 focus:bg-white focus:ring-1 focus:ring-slate-400"
+              className="block w-full rounded-xl border border-slate-200 bg-[#f4f5f7] py-3.5 pl-12 pr-4 text-[16px] text-slate-800 placeholder-slate-400 outline-none transition-all duration-200 focus:border-slate-700 focus:bg-white focus:ring-1 focus:ring-slate-700"
             />
           </div>
 
@@ -236,7 +236,7 @@ export default function SignUpPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className="block w-full rounded-xl border border-slate-200 bg-[#f4f5f7] py-3.5 pl-12 pr-12 text-sm text-slate-800 placeholder-slate-400 outline-none transition-all duration-200 focus:border-slate-400 focus:bg-white focus:ring-1 focus:ring-slate-400"
+              className="block w-full rounded-xl border border-slate-200 bg-[#f4f5f7] py-3.5 pl-12 pr-12 text-[16px] text-slate-800 placeholder-slate-400 outline-none transition-all duration-200 focus:border-slate-400 focus:bg-white focus:ring-1 focus:ring-slate-700"
             />
             {/* Password Visibility Toggle */}
             <button
@@ -250,7 +250,11 @@ export default function SignUpPage() {
                 <Eye className="h-5 w-5" strokeWidth={1.8} />
               )}
             </button>
+            
           </div>
+              {password.length<6 && (
+              <p className="text-red-500 text-sm">Password must be at least 6 characters long</p>
+            )}
 
           {/* Referral Code input */}
           <div className="relative flex items-center">
@@ -262,14 +266,14 @@ export default function SignUpPage() {
               value={referredBy}
               onChange={(e) => setReferredBy(e.target.value.toUpperCase())}
               placeholder="Referral Code (Optional)"
-              className="block w-full rounded-xl border border-slate-200 bg-[#f4f5f7] py-3.5 pl-12 pr-4 text-sm text-slate-800 placeholder-slate-400 outline-none transition-all duration-200 focus:border-slate-400 focus:bg-white focus:ring-1 focus:ring-slate-400 uppercase font-mono tracking-wider"
+              className="block w-full rounded-xl border border-slate-200 bg-[#f4f5f7] py-3.5 pl-12 pr-4 text-[16px] text-slate-800 placeholder-slate-400 outline-none transition-all duration-200 focus:border-slate-400 focus:bg-white focus:ring-1 focus:ring-slate-700 uppercase font-mono tracking-wider"
             />
           </div>
 
           <button
             type="submit"
-            disabled={isLoading || !name || !phone || !email || !password}
-            className="relative flex w-full items-center justify-center gap-1.5 rounded-xl bg-[#0066FF] hover:bg-[#0066ffbc] py-3.5 px-4 text-sm font-bold text-white shadow-sm transition-all duration-200 cursor-pointer select-none active:scale-[0.99] disabled:opacity-40 disabled:pointer-events-none"
+            disabled={isLoading || !name || !phone || !email || !password || password.length < 6 }
+            className="relative flex w-full items-center justify-center gap-1.5 rounded-xl bg-[#0066FF] hover:bg-[#0066ffbc] py-3.5 px-4 text-[16px] font-bold text-white shadow-sm transition-all duration-200 cursor-pointer select-none active:scale-[0.99] disabled:opacity-40 disabled:pointer-events-none"
           >
             {isLoading ? (
               <Loader2 className="h-5 w-5 animate-spin text-white" />
@@ -280,10 +284,11 @@ export default function SignUpPage() {
               </>
             )}
           </button>
+        
         </form>
 
         {/* Footer Switch Page link */}
-        <p className="mt-6 text-center text-[13px] font-medium text-slate-500">
+        <p className="mt-6 text-center text-[16px] font-medium text-slate-500">
           Already have an account?{" "}
           <Link
             href="/auth/signIn"
@@ -335,13 +340,13 @@ export default function SignUpPage() {
               value={otp}
               onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
               placeholder="Enter 6-Digit Code"
-              className="block w-full rounded-xl border border-slate-200 bg-[#f4f5f7] py-3.5 pl-12 pr-4 text-center text-lg font-bold letter-spacing-2 text-slate-800 placeholder-slate-400 outline-none transition-all duration-200 focus:border-slate-400 focus:bg-white focus:ring-1 focus:ring-slate-400 tracking-widest font-mono"
+              className="block w-full rounded-xl border border-slate-200 bg-[#f4f5f7] py-3.5 pl-12 pr-4 text-center text-[16px] font-bold letter-spacing-2 text-slate-800 placeholder-slate-400 outline-none transition-all duration-200 focus:border-slate-400 focus:bg-white focus:ring-1 focus:ring-slate-700 tracking-widest font-mono"
             />
           </div>
 
           <button
             type="submit"
-            disabled={isLoading || !otp}
+            disabled={isLoading || !otp || otp.length < 6}
             className="relative flex w-full items-center justify-center gap-1.5 rounded-xl bg-[#0066FF] hover:bg-[#0066ffbc] py-3.5 px-4 text-sm font-bold text-white shadow-sm transition-all duration-200 cursor-pointer select-none active:scale-[0.99] disabled:opacity-40 disabled:pointer-events-none"
           >
             {isLoading ? (

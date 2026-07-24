@@ -10,9 +10,12 @@ import {
 } from "react";
 import { CartItem, Order, OrderDetails, Product } from "./types";
 import { addReferralReward, getOrCreateReferralCode } from "./referral";
+import { useSession } from "next-auth/react";
+
 
 const CART_KEY = "fridgemall-cart";
 const ORDERS_KEY = "fridgemall-orders";
+
 
 interface CartContextValue {
   items: CartItem[];
@@ -23,6 +26,7 @@ interface CartContextValue {
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
   placeOrder: (details: OrderDetails) => Order;
+  sendSms : (message: string, number: string) => void;
   orders: Order[];
 }
 
@@ -60,6 +64,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setOrders(loadOrders());
     setHydrated(true);
   }, []);
+
+  const {data} = useSession();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -116,9 +122,25 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const clearCart = useCallback(() => setItems([]), []);
 
+  const sendSms = useCallback(async (message: string, number: string) => {
+    try {
+      const response = await fetch("/api/sms/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message, recipient: number }),
+      });
+      return response.json();
+    } catch (err) {
+      console.error("[sendSms error]", err);
+    }
+  }, []);
+
+ 
+
   const placeOrder = useCallback(
     (details: OrderDetails): Order => {
       const deliveryFee = 0;
+    
       const order: Order = {
         id: `FM-${Date.now().toString(36).toUpperCase()}`,
         items: [...items],
@@ -130,7 +152,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         status: "pending",
         createdAt: new Date().toISOString(),
         referralCodeUsed: details.referralCode,
+
       };
+
+      const itemLines = order.items
+        .map((item) => `${item.product.name} x${item.quantity} (GHS ${item.product.price})`)
+        .join("\n");
+
+      sendSms(
+        `Dear customer,\nYour order has been placed!\nOrder ID: ${order.id}\n${itemLines}\nTotal: GHS ${subtotal}\nPayment: Pay on Delivery\nWe will call you to arrange delivery. Thank you for shopping with us!\n\n Visit https://fridgemall.com/dashboard to track your order!` ,
+        `${details.phone}`
+      );
 
       const updatedOrders = [order, ...loadOrders()];
       localStorage.setItem(ORDERS_KEY, JSON.stringify(updatedOrders));
@@ -165,7 +197,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       clearCart();
       return order;
     },
-    [items, subtotal, clearCart]
+    [items, subtotal, clearCart, sendSms]
   );
 
   const value = useMemo(
@@ -178,6 +210,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       updateQuantity,
       clearCart,
       placeOrder,
+      sendSms,
       orders,
     }),
     [
@@ -189,6 +222,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       updateQuantity,
       clearCart,
       placeOrder,
+      sendSms,
       orders,
     ]
   );
