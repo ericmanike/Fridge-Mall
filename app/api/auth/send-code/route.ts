@@ -2,11 +2,12 @@ import { NextResponse } from 'next/server';
 import { generateArkeselOTP } from '@/lib/arkesel';
 import User from '@/models/User';
 import { otpRateLimit } from '@/lib/ratelimit';
+import dbConnect from '@/lib/mongoose';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    let { phone, sender_id, senderId, message, expiry, length } = body;
+    let { phone, email } = body;
 
     if (!phone || phone.length !== 10) {
       return NextResponse.json(
@@ -34,25 +35,38 @@ export async function POST(request: Request) {
         return NextResponse.json({message:'Too many request! Try after 3 minutes '})
       }
 
-      //  const existingUser = await User.findOne({ phone });
-      //   if (existingUser) {
-      //       console.log("User with this phone number already exists", existingUser);
-      //       return NextResponse.json(
+      await dbConnect();
+
+       const [phoneExists,emailExists] = await Promise.all([
+        User.findOne({phone: `${phone}` }),
+        User.findOne({email: `${email}` })
+       ]) 
+       
+        if (phoneExists) {
+            console.log("User with this phone number already exists", phoneExists);
+            return NextResponse.json(
 
               
-      //           { message: "User with this phone number already exists" },
-      //           { status: 400 }
-      //       );
-      //   }
+                { message: "User with this phone number already exists" },
+                { status: 400 }
+            );
+        }
+
+         if (emailExists) {
+            console.log("User with this email already exists", emailExists);
+            return NextResponse.json(
+                { message: "User with this email already exists" },
+                { status: 400 }
+            );
+        } 
+
 
       
 
     const result = await generateArkeselOTP({
       number: phone,
-      sender_id: sender_id || senderId,
-      message,
-      expiry,
-      length
+   
+      
     });
 
     if (result.success) {

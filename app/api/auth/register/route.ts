@@ -25,16 +25,7 @@ export async function POST(req: Request) {
         const cleanEmail = email.trim().toLowerCase();
         await dbConnect();
 
-        // const existingUser = await User.findOne({ email: cleanEmail });
-        // if (existingUser) {
-        //     console.log("User already exists", existingUser);
-        //     return NextResponse.json(
-
-
-        //         { message: "User already exists" },
-        //         { status: 400 }
-        //     );
-        // }
+   
 
         // Validate referredBy code if provided
         let validReferredBy = undefined;

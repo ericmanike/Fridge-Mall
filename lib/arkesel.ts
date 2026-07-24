@@ -32,7 +32,7 @@ export async function generateArkeselOTP(options: GenerateOTPOptions) {
   const apiKey = process.env.ARKESEL_API_KEY || process.env.NEXT_PUBLIC_ARKESEL_API_KEY;
   const formattedNumber = formatArkeselPhone(options.number);
   const senderId = options.sender_id || process.env.ARKESEL_SENDER_ID || 'Arkesel';
-  const message = options.message || 'This is OTP from Arkesel, %otp_code%';
+  const message = options.message || 'Your verification code is %otp_code% ';
 
   if (!apiKey) {
     console.warn('[ARKESEL OTP] Warning: ARKESEL_API_KEY is not configured in environment variables.');
